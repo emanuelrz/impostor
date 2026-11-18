@@ -270,7 +270,10 @@
 
   <!-- Categoría -->
   <div class="section">
-    <div class="section-label">Categoría</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <div class="section-label" style="margin-bottom:0">Categorías <span style="font-weight:600;text-transform:none;color:var(--text-muted);font-size:12px;">(elige una o más)</span></div>
+      <div id="catCountBadge" style="font-size:12px;font-weight:800;color:var(--lime);"></div>
+    </div>
     <div class="categories-grid" id="categoriesGrid"></div>
   </div>
 
@@ -328,9 +331,19 @@ function saveStorage() {
 // Init storage
 let stored = loadStorage();
 let storage = stored || {
-  config: { players: ['',''], impostors: 1, categoryId: null },
+  config: { players: ['',''], impostors: 1, categoryIds: ['futbol'] },
   categories: JSON.parse(JSON.stringify(DEFAULT_CATEGORIES)),
 };
+
+// Migration from single categoryId to categoryIds array
+if (storage.config) {
+  if (storage.config.categoryId && !storage.config.categoryIds) {
+    storage.config.categoryIds = [storage.config.categoryId];
+  }
+  if (!Array.isArray(storage.config.categoryIds)) {
+    storage.config.categoryIds = storage.config.categoryId ? [storage.config.categoryId] : ['futbol'];
+  }
+}
 
 // Merge missing builtin categories (in case new ones added in updates)
 Object.keys(DEFAULT_CATEGORIES).forEach(id => {
@@ -427,8 +440,15 @@ function renderCategories() {
   const grid = document.getElementById('categoriesGrid');
   grid.innerHTML = '';
 
+  const badge = document.getElementById('catCountBadge');
+  if (badge) {
+    const count = (cfg.categoryIds || []).length;
+    badge.textContent = count === 0 ? 'Ninguna elegida' : (count === 1 ? '1 elegida' : `${count} elegidas`);
+    badge.style.color = count === 0 ? 'var(--coral)' : 'var(--lime)';
+  }
+
   Object.entries(cats).forEach(([id, cat]) => {
-    const isSelected = cfg.categoryId === id;
+    const isSelected = Array.isArray(cfg.categoryIds) && cfg.categoryIds.includes(id);
     const isOpen = openEditorId === id;
 
     const card = document.createElement('div');
@@ -512,7 +532,13 @@ function toggleEditor(id) {
 }
 
 function selectCategory(id) {
-  cfg.categoryId = cfg.categoryId === id ? null : id;
+  if (!Array.isArray(cfg.categoryIds)) cfg.categoryIds = [];
+  const idx = cfg.categoryIds.indexOf(id);
+  if (idx >= 0) {
+    cfg.categoryIds.splice(idx, 1);
+  } else {
+    cfg.categoryIds.push(id);
+  }
   saveStorage();
   renderCategories();
   validate();
@@ -546,7 +572,9 @@ function removeWord(id, idx) {
 function deleteCategory(id) {
   if (!confirm(`¿Eliminar la categoría "${cats[id].name}"?`)) return;
   delete cats[id];
-  if (cfg.categoryId === id) cfg.categoryId = null;
+  if (Array.isArray(cfg.categoryIds)) {
+    cfg.categoryIds = cfg.categoryIds.filter(cId => cId !== id);
+  }
   openEditorId = null;
   saveStorage();
   renderCategories();
@@ -570,10 +598,13 @@ function createCategory() {
   if (!name) { document.getElementById('newCatName').focus(); return; }
   const id = 'custom_' + Date.now();
   cats[id] = { emoji, name, desc: 'Categoría personalizada', builtin: false, words: [] };
+  if (!Array.isArray(cfg.categoryIds)) cfg.categoryIds = [];
+  cfg.categoryIds.push(id);
   saveStorage();
   openEditorId = id;
   renderCategories();
   closeNewCatForm();
+  validate();
 }
 
 /* ══════════════════════════════════════
@@ -581,14 +612,21 @@ function createCategory() {
 ══════════════════════════════════════ */
 function validate() {
   const filled = cfg.players.filter(p => p.trim());
-  const ok = filled.length >= 2 && cfg.categoryId && (cats[cfg.categoryId]?.words.length > 0);
+  const selectedCats = Array.isArray(cfg.categoryIds) ? cfg.categoryIds : [];
+  let totalWords = 0;
+  selectedCats.forEach(id => {
+    if (cats[id] && cats[id].words) totalWords += cats[id].words.length;
+  });
+  const ok = filled.length >= 2 && selectedCats.length > 0 && totalWords > 0;
   document.getElementById('startBtn').disabled = !ok;
 }
 
 function startGame() {
   const filled = cfg.players.filter(p => p.trim());
-  if (filled.length < 2 || !cfg.categoryId) return;
+  const selectedCats = (cfg.categoryIds || []).filter(id => cats[id] && cats[id].words && cats[id].words.length > 0);
+  if (filled.length < 2 || selectedCats.length === 0) return;
   cfg.players = filled; // clean up empties
+  cfg.categoryIds = selectedCats;
   saveStorage();
   window.location.href = 'turno.html';
 }

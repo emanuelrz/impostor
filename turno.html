@@ -158,6 +158,15 @@
     }
     .btn-replay:hover { opacity: 0.9; }
 
+    .btn-secondary {
+      margin-top: 12px; width: 100%; background: transparent;
+      border: 1px solid var(--panel-border); border-radius: 18px; padding: 18px 26px;
+      font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800; color: var(--text-muted);
+      cursor: pointer; transition: border-color 0.15s, color 0.15s; text-decoration: none;
+      display: block; text-align: center; -webkit-tap-highlight-color: transparent;
+    }
+    .btn-secondary:hover { border-color: var(--text-muted); color: var(--text-white); }
+
     /* Transition animation */
     .fade-in { animation: fadeIn 0.3s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
@@ -256,10 +265,11 @@
       </div>
     </div>
 
-    <button class="btn-replay" onclick="window.location.href='setup.html'">
-      <span>Nueva partida</span>
-      <span>→</span>
+    <button class="btn-replay" onclick="window.location.reload()">
+      <span>Jugar otra ronda</span>
+      <span class="btn-arrow">↻</span>
     </button>
+    <a class="btn-secondary" href="setup.html">Cambiar configuración</a>
   </div>
 
 </div>
@@ -278,9 +288,32 @@ if (!storage || !storage.config || !storage.config.players || storage.config.pla
 
 const cfg  = storage.config;
 const cats = storage.categories;
-const cat  = cats[cfg.categoryId];
 
-if (!cat || !cat.words || cat.words.length === 0) {
+// Normalize selected category IDs
+let selectedCatIds = cfg.categoryIds;
+if (!selectedCatIds && cfg.categoryId) {
+  selectedCatIds = [cfg.categoryId];
+}
+if (!Array.isArray(selectedCatIds)) {
+  selectedCatIds = [];
+}
+// Filter to valid categories with words
+selectedCatIds = selectedCatIds.filter(id => cats && cats[id] && cats[id].words && cats[id].words.length > 0);
+
+if (selectedCatIds.length === 0) {
+  window.location.href = 'setup.html';
+}
+
+// Build word pool with their respective category
+const wordPool = [];
+selectedCatIds.forEach(id => {
+  const c = cats[id];
+  c.words.forEach(w => {
+    wordPool.push({ word: w, catId: id, catName: c.name, catEmoji: c.emoji });
+  });
+});
+
+if (wordPool.length === 0) {
   window.location.href = 'setup.html';
 }
 
@@ -291,7 +324,10 @@ if (!cat || !cat.words || cat.words.length === 0) {
 function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function shuffle(arr) { const a = [...arr]; for (let i = a.length-1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 
-const secretWord = pickRandom(cat.words);
+const chosenItem = pickRandom(wordPool);
+const secretWord = chosenItem.word;
+const secretCategoryName = chosenItem.catName;
+const secretCategoryEmoji = chosenItem.catEmoji;
 const players    = shuffle([...cfg.players]);  // shuffle order
 const nImpostors = cfg.impostors;
 
@@ -361,14 +397,29 @@ function revealCard() {
   }
 
   // Category
-  document.getElementById('cardCategory').textContent = cat.name.toUpperCase();
+  const catEl = document.getElementById('cardCategory');
+  if (isImpostor) {
+    if (selectedCatIds.length > 1) {
+      catEl.textContent = 'CATEGORÍAS EN JUEGO: ' + selectedCatIds.map(id => cats[id].name.toUpperCase()).join(' · ');
+    } else {
+      catEl.textContent = secretCategoryName.toUpperCase();
+    }
+  } else {
+    if (selectedCatIds.length > 1) {
+      catEl.textContent = `${secretCategoryName.toUpperCase()} · ${selectedCatIds.length} CATEGORÍAS ACTIVAS`;
+    } else {
+      catEl.textContent = secretCategoryName.toUpperCase();
+    }
+  }
 
   // Description
   const desc    = document.getElementById('cardDesc');
   const descSub = document.getElementById('cardDescSub');
   if (isImpostor) {
     desc.textContent    = 'Escucha las pistas de los demás.';
-    descSub.textContent = 'Intenta adivinar la palabra sin que te descubran.';
+    descSub.textContent = selectedCatIds.length > 1
+      ? 'Adivina la palabra y cuál de las categorías es.'
+      : 'Intenta adivinar la palabra sin que te descubran.';
   } else {
     desc.textContent    = 'Todos la conocen, menos uno.';
     descSub.textContent = 'Descubre quién está fingiendo.';
@@ -380,10 +431,13 @@ function revealCard() {
   // Clue or impostor panel
   const extra = document.getElementById('clueOrImpostor');
   if (isImpostor) {
+    const hintText = selectedCatIds.length > 1
+      ? `Hay ${selectedCatIds.length} categorías posibles. ¡Descubre de cuál hablan!`
+      : 'Finge que conoces la palabra sin decirla.';
     extra.innerHTML = `
       <div class="impostor-hint">
         <div class="impostor-hint-label">Tu misión</div>
-        <div class="impostor-hint-text">Finge que conoces la palabra sin decirla.</div>
+        <div class="impostor-hint-text">${hintText}</div>
       </div>`;
   } else {
     extra.innerHTML = `

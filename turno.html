@@ -3,319 +3,437 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Impostor – Tu turno</title>
+  <title>Impostor – Turno</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #111210;
-      --lime: #c8f135;
-      --text-white: #f5f5f0;
-      --text-muted: #9a9a8e;
-      --panel-bg: #1e1f1c;
-      --panel-border: #2a2b27;
-      --card-bg: #f0ede4;
-      --card-text: #1a1a18;
+      --bg: #111210; --lime: #c8f135; --coral: #f4634a;
+      --text-white: #f5f5f0; --text-muted: #9a9a8e;
+      --panel-bg: #1e1f1c; --panel-border: #2a2b27;
+      --card-bg: #f0ede4; --card-text: #1a1a18;
+    }
+    html { font-family: 'Nunito Sans', system-ui, sans-serif; background: var(--bg); }
+    body { min-height: 100vh; background: var(--bg); display: flex; justify-content: center; color: var(--text-white); }
+
+    .page {
+      width: 100%; max-width: 560px;
+      display: flex; flex-direction: column;
+      min-height: 100vh; min-height: 100dvh;
     }
 
-    html {
-      font-family: 'Nunito Sans', system-ui, sans-serif;
-      background: var(--bg);
-      min-height: 100%;
+    /* ─── PASS SCREEN (between players) ─── */
+    #passScreen {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      flex: 1; padding: 40px 28px; text-align: center; gap: 0;
     }
-
-    body {
-      min-height: 100vh;
-      background: var(--bg);
+    .pass-icon {
+      width: 72px; height: 72px; background: var(--panel-bg);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 28px;
     }
+    .pass-icon svg { width: 34px; height: 34px; stroke: var(--lime); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .pass-label { font-size: 12px; font-weight: 800; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+    .pass-name { font-family: 'Nunito', sans-serif; font-size: 36px; font-weight: 900; color: var(--text-white); letter-spacing: -0.02em; margin-bottom: 6px; }
+    .pass-sub { font-size: 14px; font-weight: 600; color: var(--text-muted); margin-bottom: 48px; }
+    .pass-btn {
+      width: 100%; max-width: 320px; background: var(--panel-bg); border: 1px solid var(--panel-border);
+      border-radius: 18px; padding: 20px 26px; display: flex; align-items: center; justify-content: center;
+      font-family: 'Nunito', sans-serif; font-size: 17px; font-weight: 900; color: var(--text-white);
+      cursor: pointer; gap: 10px; transition: background 0.15s, border-color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pass-btn:hover { background: #252621; border-color: rgba(200,241,53,0.3); }
+    .pass-btn svg { width: 20px; height: 20px; stroke: var(--lime); fill: none; stroke-width: 2; stroke-linecap: round; }
 
-    /* ─── MOBILE (base) ─── */
+    /* ─── CARD SCREEN (reveal) ─── */
+    #cardScreen { display: none; flex-direction: column; flex: 1; }
 
-    .status-bar { display: none; }
-
+    /* Nav */
     .nav-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 20px 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 20px 0;
     }
     .nav-back {
-      width: 36px; height: 36px;
-      background: #1e1f1c;
-      border-radius: 50%;
+      width: 36px; height: 36px; background: var(--panel-bg); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer; flex-shrink: 0;
-      text-decoration: none;
-      transition: opacity 0.15s;
+      cursor: pointer; text-decoration: none; transition: opacity 0.15s;
     }
     .nav-back:hover { opacity: 0.7; }
     .nav-back svg { width: 16px; height: 16px; stroke: var(--text-white); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-    .nav-title {
-      font-size: 12px; font-weight: 800; color: var(--text-muted);
-      letter-spacing: 0.1em; text-transform: uppercase; text-align: center;
-    }
-    .nav-counter {
-      background: #1e1f1c; border-radius: 20px; padding: 6px 13px;
-      font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800; color: var(--text-white);
-    }
+    .nav-counter { background: var(--panel-bg); border-radius: 20px; padding: 6px 13px; font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800; color: var(--text-white); }
 
+    /* Hero */
     .hero { padding: 20px 22px 0; }
-    .hero-name {
-      font-family: 'Nunito', sans-serif;
-      font-size: 34px; font-weight: 900; color: var(--text-white);
-      letter-spacing: -0.02em; line-height: 1.05;
-    }
-    .hero-sub { margin-top: 6px; font-size: 14px; font-weight: 600; color: var(--text-muted); }
+    .hero-name { font-family: 'Nunito', sans-serif; font-size: 32px; font-weight: 900; color: var(--text-white); letter-spacing: -0.02em; line-height: 1.05; }
+    .hero-sub { margin-top: 6px; font-size: 13.5px; font-weight: 600; color: var(--text-muted); }
 
+    /* Progress */
     .progress { display: flex; align-items: center; gap: 6px; padding: 14px 22px 0; }
-    .progress-dot { height: 4px; border-radius: 3px; background: #2e2f2b; flex: 1; }
+    .progress-dot { height: 4px; border-radius: 3px; background: #2e2f2b; flex: 1; transition: background 0.4s; }
     .progress-dot.done { background: var(--lime); }
 
-    /* ─── Secret card ─── */
+    /* Secret card */
     .secret-card {
-      margin: 16px 20px 0;
-      background: var(--card-bg);
-      border-radius: 24px;
-      padding: 22px 24px 26px;
-      display: flex; flex-direction: column; align-items: center; text-align: center;
+      margin: 16px 20px 0; background: var(--card-bg); border-radius: 24px;
+      padding: 22px 24px 26px; display: flex; flex-direction: column; align-items: center; text-align: center;
     }
     .role-badge {
       display: inline-flex; align-items: center; gap: 7px;
-      background: var(--lime); color: #1a1a18;
+      border-radius: 20px; padding: 7px 16px; margin-bottom: 20px;
       font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 900;
       letter-spacing: 0.08em; text-transform: uppercase;
-      padding: 7px 16px; border-radius: 20px; margin-bottom: 20px;
     }
-    .role-badge svg { width: 13px; height: 13px; stroke: #1a1a18; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-    .card-pretitle { font-size: 13px; font-weight: 600; color: #6b6b60; margin-bottom: 10px; }
-    .secret-word {
-      font-family: 'Nunito', sans-serif;
-      font-size: 58px; font-weight: 900; color: var(--card-text);
-      letter-spacing: -0.03em; line-height: 1; text-transform: uppercase;
-    }
-    .card-divider { width: 100%; height: 1px; background: rgba(0,0,0,0.1); margin: 20px 0 16px; }
-    .card-category {
-      font-size: 10.5px; font-weight: 800; color: #9a9a7a;
-      letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px;
-    }
-    .card-description { font-size: 15.5px; font-weight: 700; color: var(--card-text); line-height: 1.4; }
-    .card-description-sub { margin-top: 4px; font-size: 13.5px; font-weight: 600; color: #6b6b60; }
+    .role-badge.innocent { background: var(--lime); color: #1a1a18; }
+    .role-badge.impostor { background: var(--coral); color: #fff; }
+    .role-badge svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
-    /* ─── Hint strip ─── */
-    .hint-strip {
-      margin: 14px 20px 0;
-      display: flex; align-items: center; gap: 11px;
-    }
-    .hint-icon { flex-shrink: 0; }
+    .card-pretitle { font-size: 13px; font-weight: 600; color: #6b6b60; margin-bottom: 10px; }
+    .secret-word { font-family: 'Nunito', sans-serif; font-size: 54px; font-weight: 900; color: var(--card-text); letter-spacing: -0.03em; line-height: 1; text-transform: uppercase; }
+    .impostor-mark { font-family: 'Nunito', sans-serif; font-size: 80px; font-weight: 900; color: rgba(244,99,74,0.25); line-height: 1; }
+    .card-divider { width: 100%; height: 1px; background: rgba(0,0,0,0.1); margin: 20px 0 16px; }
+    .card-category { font-size: 10.5px; font-weight: 800; color: #9a9a7a; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+    .card-description { font-size: 15px; font-weight: 700; color: var(--card-text); line-height: 1.4; }
+    .card-description-sub { margin-top: 4px; font-size: 13px; font-weight: 600; color: #6b6b60; }
+
+    /* Hint & clue */
+    .hint-strip { margin: 14px 20px 0; display: flex; align-items: center; gap: 11px; }
     .hint-icon svg { width: 22px; height: 22px; stroke: var(--lime); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
     .hint-text { font-size: 13.5px; font-weight: 700; color: var(--text-muted); }
 
-    /* ─── Clue panel ─── */
-    .clue-panel {
-      margin: 12px 20px 0;
-      border-left: 2.5px solid var(--lime);
-      padding: 4px 0 4px 14px;
-    }
-    .clue-label {
-      font-family: 'Nunito', sans-serif;
-      font-size: 11px; font-weight: 900; color: var(--lime);
-      letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px;
-    }
+    .clue-panel { margin: 12px 20px 0; border-left: 2.5px solid var(--lime); padding: 4px 0 4px 14px; }
+    .clue-label { font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 900; color: var(--lime); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
     .clue-text { font-size: 14.5px; font-weight: 700; color: var(--text-white); }
 
-    /* ─── CTA ─── */
-    .cta-wrap { padding: 18px 20px 0; }
+    /* impostor hint */
+    .impostor-hint { margin: 12px 20px 0; border-left: 2.5px solid var(--coral); padding: 4px 0 4px 14px; }
+    .impostor-hint-label { font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 900; color: var(--coral); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+    .impostor-hint-text { font-size: 14.5px; font-weight: 700; color: var(--text-white); }
+
+    /* CTA */
+    .spacer { flex: 1; min-height: 20px; }
+    .cta-wrap { padding: 18px 20px 28px; }
     .btn-primary {
       display: flex; align-items: center; justify-content: space-between;
-      width: 100%;
-      background: var(--lime); color: #111; border: none; border-radius: 18px;
-      padding: 20px 26px;
+      width: 100%; background: var(--lime); color: #111; border: none;
+      border-radius: 18px; padding: 20px 26px;
       font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 900;
-      cursor: pointer; letter-spacing: -0.01em;
-      transition: transform 0.12s ease, opacity 0.12s ease;
+      cursor: pointer; letter-spacing: -0.01em; transition: transform 0.12s, opacity 0.12s;
       -webkit-tap-highlight-color: transparent;
-      text-decoration: none;
     }
-    .btn-primary:hover { opacity: 0.92; }
+    .btn-primary:hover { opacity: 0.9; }
     .btn-primary:active { transform: scale(0.97); }
     .btn-arrow { font-size: 22px; font-weight: 900; }
-
     .next-player { margin-top: 10px; text-align: center; font-size: 13px; font-weight: 700; color: var(--text-muted); }
 
-    .home-indicator { margin-top: 20px; display: flex; justify-content: center; padding-bottom: 8px; }
-    .home-indicator-bar { width: 120px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 3px; }
+    /* ─── FINISH SCREEN ─── */
+    #finishScreen {
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+      flex: 1; padding: 40px 28px; text-align: center; gap: 0;
+    }
+    .finish-emoji { font-size: 64px; margin-bottom: 24px; }
+    .finish-title { font-family: 'Nunito', sans-serif; font-size: 32px; font-weight: 900; color: var(--text-white); letter-spacing: -0.02em; margin-bottom: 10px; }
+    .finish-sub { font-size: 15px; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; line-height: 1.5; }
+    .finish-word-reveal { margin: 24px 0; background: var(--panel-bg); border-radius: 16px; padding: 16px 24px; text-align: center; }
+    .finish-word-label { font-size: 11px; font-weight: 800; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+    .finish-word { font-family: 'Nunito', sans-serif; font-size: 32px; font-weight: 900; color: var(--lime); letter-spacing: -0.02em; text-transform: uppercase; }
+    .finish-impostors { margin-bottom: 32px; background: var(--panel-bg); border-radius: 16px; padding: 14px 20px; text-align: left; width: 100%; }
+    .finish-imp-label { font-size: 11px; font-weight: 800; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+    .finish-imp-list { display: flex; flex-direction: column; gap: 8px; }
+    .finish-imp-item { display: flex; align-items: center; gap: 10px; font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800; color: var(--coral); }
+    .finish-imp-item::before { content: ''; display: block; width: 8px; height: 8px; border-radius: 50%; background: var(--coral); flex-shrink: 0; }
+    .btn-replay {
+      width: 100%; background: var(--lime); color: #111; border: none; border-radius: 18px;
+      padding: 20px 26px; display: flex; align-items: center; justify-content: space-between;
+      font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 900;
+      cursor: pointer; transition: opacity 0.15s; text-decoration: none; -webkit-tap-highlight-color: transparent;
+    }
+    .btn-replay:hover { opacity: 0.9; }
+    .btn-secondary {
+      margin-top: 12px; width: 100%; background: transparent;
+      border: 1px solid var(--panel-border); border-radius: 18px; padding: 16px 26px;
+      font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800; color: var(--text-muted);
+      cursor: pointer; transition: border-color 0.15s, color 0.15s; text-decoration: none;
+      display: block; text-align: center;
+    }
+    .btn-secondary:hover { border-color: var(--text-muted); color: var(--text-white); }
 
-    /* ─── TABLET (600px+) ─── */
+    /* Transition animation */
+    .fade-in { animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    /* ─── TABLET / DESKTOP ─── */
     @media (min-width: 600px) {
-      body {
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        padding: 40px 24px;
-        background: #0c0d0b;
-        min-height: 100vh;
-      }
-
-      .wrapper {
-        width: 100%;
-        max-width: 900px;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0 48px;
-        align-items: start;
-      }
-
-      .status-bar { display: none; }
-
-      .col-left {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .col-right {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        padding-top: 60px; /* align with card roughly */
-      }
-
-      .nav-bar { padding: 0 0 16px; }
-
-      .hero { padding: 0; }
-      .hero-name { font-size: 46px; }
-      .hero-sub { font-size: 16px; }
-
-      .progress { padding: 14px 0 0; }
-
-      .secret-card {
-        margin: 20px 0 0;
-        border-radius: 28px;
-        padding: 28px 30px 32px;
-      }
-      .secret-word { font-size: 72px; }
-      .role-badge { font-size: 13px; padding: 8px 18px; }
-      .card-pretitle { font-size: 14px; }
-      .card-description { font-size: 17px; }
-
-      .hint-strip { margin: 16px 0 0; }
-      .hint-text { font-size: 15px; }
-
-      .clue-panel { margin: 14px 0 0; }
-      .clue-text { font-size: 16px; }
-
-      .cta-wrap { padding: 0; }
-      .btn-primary { font-size: 20px; padding: 22px 28px; border-radius: 20px; }
-
-      .next-player { font-size: 14px; }
-      .home-indicator { display: none; }
+      body { background: #0c0d0b; padding: 40px 24px; align-items: flex-start; }
+      .page { background: var(--bg); border-radius: 28px; overflow: hidden; min-height: auto; box-shadow: 0 24px 80px rgba(0,0,0,0.6); }
+      #passScreen, #finishScreen { min-height: 600px; }
+      #cardScreen { min-height: 600px; }
     }
-
-    /* ─── DESKTOP (1024px+) ─── */
-    @media (min-width: 1024px) {
-      body { padding: 60px 48px; align-items: center; }
-
-      .wrapper { max-width: 1100px; gap: 0 80px; }
-
-      .hero-name { font-size: 56px; }
-      .secret-word { font-size: 86px; }
-
-      .col-right { padding-top: 72px; }
-
-      .btn-primary { font-size: 22px; }
-    }
+    @media (min-width: 1024px) { body { align-items: center; min-height: 100vh; } }
   </style>
 </head>
 <body>
+<div class="page">
 
-  <div class="wrapper">
-    <div class="col-left">
+  <!-- ── PASS SCREEN ── -->
+  <div id="passScreen">
+    <div class="pass-icon">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    <div class="pass-label">Le toca a</div>
+    <div class="pass-name" id="passName">—</div>
+    <div class="pass-sub">Pasale el celular</div>
+    <button class="pass-btn" onclick="revealCard()">
+      <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      Ver mi carta
+    </button>
+  </div>
 
-      <!-- Status bar (mobile only) -->
-      <div class="status-bar">
-        <span class="status-time">9:41</span>
-        <div class="status-icons">
-          <svg width="17" height="13" viewBox="0 0 17 13"><rect x="0" y="8" width="3" height="5" rx="0.8"/><rect x="4.5" y="5" width="3" height="8" rx="0.8"/><rect x="9" y="2" width="3" height="11" rx="0.8"/><rect x="13.5" y="0" width="3" height="13" rx="0.8"/></svg>
-          <svg width="16" height="13" viewBox="0 0 16 13"><circle cx="8" cy="11.5" r="1.5"/><path d="M3.5 7.2A6.4 6.4 0 0 1 8 5.5c1.8 0 3.4.7 4.5 1.7" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M1 4A9.9 9.9 0 0 1 8 1c2.8 0 5.3 1.1 7 2.9" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
-          <svg width="25" height="13" viewBox="0 0 25 13"><rect x="0" y="1" width="22" height="11" rx="2.5" stroke="white" stroke-width="1.2" fill="none"/><rect x="22.5" y="4" width="2" height="5" rx="1"/><rect x="1.5" y="2.5" width="17" height="8" rx="1.5"/></svg>
-        </div>
+  <!-- ── CARD SCREEN ── -->
+  <div id="cardScreen">
+    <div class="nav-bar">
+      <a class="nav-back" href="setup.html">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      </a>
+      <div class="nav-counter" id="navCounter"></div>
+    </div>
+
+    <div class="hero">
+      <h1 class="hero-name" id="cardPlayerName"></h1>
+      <p class="hero-sub">Solo tú puedes mirar la pantalla.</p>
+    </div>
+
+    <div class="progress" id="progressBar"></div>
+
+    <div class="secret-card">
+      <div class="role-badge" id="roleBadge"></div>
+      <p class="card-pretitle" id="cardPretitle"></p>
+      <div id="cardWord"></div>
+      <div class="card-divider"></div>
+      <p class="card-category" id="cardCategory"></p>
+      <p class="card-description" id="cardDesc"></p>
+      <p class="card-description-sub" id="cardDescSub"></p>
+    </div>
+
+    <div class="hint-strip" id="hintStrip">
+      <div class="hint-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       </div>
+      <span class="hint-text">Memorízala. Que nadie más la vea.</span>
+    </div>
 
-      <!-- Nav -->
-      <div class="nav-bar">
-        <a class="nav-back" href="index.html">
-          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-        </a>
-        <span class="nav-title">Reparte el secreto</span>
-        <div class="nav-counter">2 / 6</div>
-      </div>
+    <div id="clueOrImpostor"></div>
 
-      <!-- Hero -->
-      <div class="hero">
-        <h1 class="hero-name">Sofía, tu turno.</h1>
-        <p class="hero-sub">Solo tú puedes mirar la pantalla.</p>
-      </div>
+    <div class="spacer"></div>
 
-      <!-- Progress -->
-      <div class="progress">
-        <div class="progress-dot done"></div>
-        <div class="progress-dot done"></div>
-        <div class="progress-dot"></div>
-        <div class="progress-dot"></div>
-        <div class="progress-dot"></div>
-        <div class="progress-dot"></div>
-      </div>
+    <div class="cta-wrap">
+      <button class="btn-primary" id="nextBtn" onclick="nextPlayer()">
+        <span>Ocultar y pasar</span>
+        <span class="btn-arrow">→</span>
+      </button>
+      <p class="next-player" id="nextLabel"></p>
+    </div>
+  </div>
 
-      <!-- Secret card -->
-      <div class="secret-card">
-        <div class="role-badge">
-          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-          Eres inocente
-        </div>
-        <p class="card-pretitle">Tu palabra secreta es</p>
-        <div class="secret-word">Playa</div>
-        <div class="card-divider"></div>
-        <p class="card-category">Lugares</p>
-        <p class="card-description">Todos la conocen, menos uno.</p>
-        <p class="card-description-sub">Descubre quién está fingiendo.</p>
-      </div>
+  <!-- ── FINISH SCREEN ── -->
+  <div id="finishScreen">
+    <div class="finish-emoji">🕵️</div>
+    <div class="finish-title">¡Todos listos!</div>
+    <div class="finish-sub">Ya saben sus roles.<br>Ahora empieza el juego.</div>
 
-    </div><!-- /col-left -->
+    <div class="finish-word-reveal">
+      <div class="finish-word-label">La palabra secreta es</div>
+      <div class="finish-word" id="finishWord"></div>
+    </div>
 
-    <div class="col-right">
+    <div class="finish-impostors">
+      <div class="finish-imp-label">Impostores</div>
+      <div class="finish-imp-list" id="finishImpostorList"></div>
+    </div>
 
-      <!-- Hint strip -->
-      <div class="hint-strip">
-        <div class="hint-icon">
-          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        </div>
-        <span class="hint-text">Memorízala. Que nadie más la vea.</span>
-      </div>
+    <button class="btn-replay" onclick="window.location.href='turno.html'">
+      <span>Jugar de nuevo</span>
+      <span>→</span>
+    </button>
+    <a class="btn-secondary" href="setup.html">Cambiar configuración</a>
+  </div>
 
-      <!-- Clue panel -->
+</div>
+
+<script>
+/* ══════════════════════════════════════
+   LOAD CONFIG
+══════════════════════════════════════ */
+const STORAGE_KEY = 'impostor_v2';
+let storage;
+try { storage = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch(e) {}
+
+if (!storage || !storage.config || !storage.config.players || storage.config.players.length < 2) {
+  window.location.href = 'setup.html';
+}
+
+const cfg  = storage.config;
+const cats = storage.categories;
+const cat  = cats[cfg.categoryId];
+
+if (!cat || !cat.words || cat.words.length === 0) {
+  window.location.href = 'setup.html';
+}
+
+/* ══════════════════════════════════════
+   BUILD GAME STATE
+══════════════════════════════════════ */
+// Pick random word
+function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function shuffle(arr) { const a = [...arr]; for (let i = a.length-1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+const secretWord = pickRandom(cat.words);
+const players    = shuffle([...cfg.players]);  // shuffle order
+const nImpostors = cfg.impostors;
+
+// Assign impostor indices (always at least 1)
+const impostorIdxs = new Set(shuffle([...Array(players.length).keys()]).slice(0, nImpostors));
+
+let currentIdx = 0; // which player we're on
+let gamePhase  = 'pass'; // 'pass' | 'card' | 'finish'
+
+/* ══════════════════════════════════════
+   RENDER PASS SCREEN
+══════════════════════════════════════ */
+function showPass() {
+  gamePhase = 'pass';
+  document.getElementById('passScreen').style.display = 'flex';
+  document.getElementById('cardScreen').style.display = 'none';
+  document.getElementById('finishScreen').style.display = 'none';
+  document.getElementById('passName').textContent = players[currentIdx];
+  document.getElementById('passScreen').classList.add('fade-in');
+}
+
+/* ══════════════════════════════════════
+   RENDER CARD SCREEN
+══════════════════════════════════════ */
+function revealCard() {
+  gamePhase = 'card';
+  document.getElementById('passScreen').style.display = 'none';
+  document.getElementById('cardScreen').style.display = 'flex';
+  document.getElementById('finishScreen').style.display = 'none';
+  document.getElementById('cardScreen').classList.add('fade-in');
+
+  const isImpostor = impostorIdxs.has(currentIdx);
+  const isLast = currentIdx === players.length - 1;
+
+  // Nav counter
+  document.getElementById('navCounter').textContent = `${currentIdx+1} / ${players.length}`;
+
+  // Hero
+  document.getElementById('cardPlayerName').textContent = `${players[currentIdx]}, tu turno.`;
+
+  // Progress bar
+  const bar = document.getElementById('progressBar');
+  bar.innerHTML = players.map((_,i) =>
+    `<div class="progress-dot ${i <= currentIdx ? 'done' : ''}"></div>`
+  ).join('');
+
+  // Role badge
+  const badge = document.getElementById('roleBadge');
+  if (isImpostor) {
+    badge.className = 'role-badge impostor';
+    badge.innerHTML = `<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Eres el impostor`;
+  } else {
+    badge.className = 'role-badge innocent';
+    badge.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Eres inocente`;
+  }
+
+  // Pretitle & word
+  const pretitle = document.getElementById('cardPretitle');
+  const wordEl   = document.getElementById('cardWord');
+
+  if (isImpostor) {
+    pretitle.textContent = 'No conoces la palabra';
+    wordEl.innerHTML = `<div class="impostor-mark">?</div>`;
+  } else {
+    pretitle.textContent = 'Tu palabra secreta es';
+    wordEl.innerHTML = `<div class="secret-word">${secretWord}</div>`;
+  }
+
+  // Category
+  document.getElementById('cardCategory').textContent = cat.name.toUpperCase();
+
+  // Description
+  const desc    = document.getElementById('cardDesc');
+  const descSub = document.getElementById('cardDescSub');
+  if (isImpostor) {
+    desc.textContent    = 'Escucha las pistas de los demás.';
+    descSub.textContent = 'Intenta adivinar la palabra sin que te descubran.';
+  } else {
+    desc.textContent    = 'Todos la conocen, menos uno.';
+    descSub.textContent = 'Descubre quién está fingiendo.';
+  }
+
+  // Hint strip
+  document.getElementById('hintStrip').style.display = isImpostor ? 'none' : 'flex';
+
+  // Clue or impostor panel
+  const extra = document.getElementById('clueOrImpostor');
+  if (isImpostor) {
+    extra.innerHTML = `
+      <div class="impostor-hint">
+        <div class="impostor-hint-label">Tu misión</div>
+        <div class="impostor-hint-text">Finge que conoces la palabra sin decirla.</div>
+      </div>`;
+  } else {
+    extra.innerHTML = `
       <div class="clue-panel">
         <div class="clue-label">La clave</div>
         <div class="clue-text">Da una pista sin decir la palabra.</div>
-      </div>
+      </div>`;
+  }
 
-      <!-- CTA -->
-      <div class="cta-wrap">
-        <button class="btn-primary" onclick="alert('Siguiente jugador')">
-          <span>Ocultar y pasar</span>
-          <span class="btn-arrow">→</span>
-        </button>
-        <p class="next-player">Siguiente: Mateo</p>
-      </div>
+  // Next button label
+  const nextLabel = document.getElementById('nextLabel');
+  if (isLast) {
+    document.getElementById('nextBtn').querySelector('span').textContent = '¡Listo, a jugar!';
+    nextLabel.textContent = '';
+  } else {
+    document.getElementById('nextBtn').querySelector('span').textContent = 'Ocultar y pasar';
+    nextLabel.textContent = `Siguiente: ${players[currentIdx+1]}`;
+  }
+}
 
-      <!-- Home indicator (mobile) -->
-      <div class="home-indicator">
-        <div class="home-indicator-bar"></div>
-      </div>
+/* ══════════════════════════════════════
+   NEXT PLAYER
+══════════════════════════════════════ */
+function nextPlayer() {
+  if (currentIdx < players.length - 1) {
+    currentIdx++;
+    showPass();
+  } else {
+    showFinish();
+  }
+}
 
-    </div><!-- /col-right -->
-  </div>
+/* ══════════════════════════════════════
+   FINISH SCREEN
+══════════════════════════════════════ */
+function showFinish() {
+  gamePhase = 'finish';
+  document.getElementById('passScreen').style.display = 'none';
+  document.getElementById('cardScreen').style.display = 'none';
+  document.getElementById('finishScreen').style.display = 'flex';
+  document.getElementById('finishScreen').classList.add('fade-in');
 
+  document.getElementById('finishWord').textContent = secretWord;
+
+  const list = document.getElementById('finishImpostorList');
+  list.innerHTML = [...impostorIdxs]
+    .map(i => `<div class="finish-imp-item">${players[i]}</div>`)
+    .join('');
+}
+
+/* ── Init ── */
+showPass();
+</script>
 </body>
 </html>

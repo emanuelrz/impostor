@@ -9,361 +9,236 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #111210;
-      --lime: #c8f135;
-      --coral: #f4634a;
-      --text-white: #f5f5f0;
-      --text-muted: #9a9a8e;
-      --panel-bg: #1a1b18;
-      --panel-border: #272824;
-      --input-bg: #1e1f1c;
+      --bg: #111210; --lime: #c8f135; --coral: #f4634a;
+      --text-white: #f5f5f0; --text-muted: #9a9a8e;
+      --panel-bg: #1a1b18; --panel-border: #272824; --input-bg: #1e1f1c;
     }
-
     html { font-family: 'Nunito Sans', system-ui, sans-serif; background: var(--bg); }
+    body { min-height: 100vh; background: var(--bg); display: flex; justify-content: center; color: var(--text-white); }
 
-    body {
-      min-height: 100vh;
-      background: var(--bg);
-      display: flex;
-      justify-content: center;
-      color: var(--text-white);
-    }
+    .page { width: 100%; max-width: 560px; padding: 0 0 130px; display: flex; flex-direction: column; }
 
-    .page {
-      width: 100%;
-      max-width: 560px;
-      padding: 0 0 120px; /* space for sticky footer */
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* ─── Nav ─── */
+    /* Nav */
     .nav-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px 20px 0;
-      position: sticky;
-      top: 0;
-      background: var(--bg);
-      z-index: 20;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 20px 0; position: sticky; top: 0; background: var(--bg); z-index: 20;
     }
-
     .nav-back {
-      width: 36px; height: 36px;
-      background: var(--input-bg);
-      border-radius: 50%;
+      width: 36px; height: 36px; background: var(--input-bg); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer; text-decoration: none;
-      transition: opacity 0.15s;
-      flex-shrink: 0;
+      cursor: pointer; text-decoration: none; transition: opacity 0.15s;
     }
     .nav-back:hover { opacity: 0.7; }
     .nav-back svg { width: 16px; height: 16px; stroke: var(--text-white); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-
-    .nav-title {
-      font-family: 'Nunito', sans-serif;
-      font-size: 16px; font-weight: 900;
-      color: var(--text-white);
-      letter-spacing: -0.01em;
-    }
-
+    .nav-title { font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 900; color: var(--text-white); }
     .nav-spacer { width: 36px; }
 
-    /* ─── Sections ─── */
-    .section {
-      padding: 28px 20px 0;
-    }
+    /* Section */
+    .section { padding: 28px 20px 0; }
+    .section-label { font-size: 11px; font-weight: 800; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 14px; }
 
-    .section-label {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--text-muted);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
-
-    /* ─── Players ─── */
-    .players-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
+    /* Players */
+    .players-list { display: flex; flex-direction: column; gap: 10px; }
     .player-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--input-bg);
-      border: 1px solid var(--panel-border);
-      border-radius: 14px;
-      padding: 0 14px 0 16px;
-      height: 52px;
-      transition: border-color 0.2s;
+      display: flex; align-items: center; gap: 10px;
+      background: var(--input-bg); border: 1px solid var(--panel-border);
+      border-radius: 14px; padding: 0 14px 0 16px; height: 52px; transition: border-color 0.2s;
     }
-
-    .player-row:focus-within {
-      border-color: var(--lime);
-    }
-
-    .player-num {
-      font-family: 'Nunito', sans-serif;
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--text-muted);
-      width: 20px;
-      flex-shrink: 0;
-    }
-
+    .player-row:focus-within { border-color: var(--lime); }
+    .player-num { font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800; color: var(--text-muted); width: 20px; flex-shrink: 0; }
     .player-input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      font-family: 'Nunito Sans', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text-white);
-      caret-color: var(--lime);
+      flex: 1; background: transparent; border: none; outline: none;
+      font-family: 'Nunito Sans', sans-serif; font-size: 15px; font-weight: 700;
+      color: var(--text-white); caret-color: var(--lime);
     }
-
     .player-input::placeholder { color: var(--text-muted); font-weight: 600; }
-
     .remove-btn {
-      width: 26px; height: 26px;
-      border-radius: 50%;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--text-muted);
-      font-size: 18px;
-      line-height: 1;
-      transition: color 0.15s, background 0.15s;
-      flex-shrink: 0;
-      padding: 0;
+      width: 26px; height: 26px; border-radius: 50%; background: transparent; border: none;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 20px; line-height: 1; transition: color 0.15s, background 0.15s;
     }
     .remove-btn:hover { color: var(--coral); background: rgba(244,99,74,0.1); }
-
     .add-player-btn {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: transparent;
-      border: 1.5px dashed var(--panel-border);
-      border-radius: 14px;
-      padding: 0 16px;
-      height: 52px;
-      cursor: pointer;
-      color: var(--text-muted);
-      font-family: 'Nunito Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      width: 100%;
-      transition: border-color 0.2s, color 0.2s;
-      margin-top: 10px;
+      display: flex; align-items: center; gap: 10px; background: transparent;
+      border: 1.5px dashed var(--panel-border); border-radius: 14px; padding: 0 16px;
+      height: 52px; cursor: pointer; color: var(--text-muted);
+      font-family: 'Nunito Sans', sans-serif; font-size: 14px; font-weight: 700;
+      width: 100%; transition: border-color 0.2s, color 0.2s; margin-top: 10px;
     }
     .add-player-btn:hover { border-color: var(--lime); color: var(--lime); }
+    .add-icon { width: 24px; height: 24px; background: var(--input-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
 
-    .add-player-btn .plus {
-      width: 24px; height: 24px;
-      background: var(--input-bg);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px;
-      line-height: 1;
-    }
-
-    /* ─── Impostors ─── */
-    .stepper {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      background: var(--input-bg);
-      border: 1px solid var(--panel-border);
-      border-radius: 14px;
-      overflow: hidden;
-      height: 56px;
-    }
-
+    /* Impostors */
+    .stepper { display: flex; align-items: center; background: var(--input-bg); border: 1px solid var(--panel-border); border-radius: 14px; overflow: hidden; height: 56px; }
     .stepper-btn {
-      width: 56px; height: 56px;
-      background: transparent;
-      border: none;
-      cursor: pointer;
+      width: 56px; height: 56px; background: transparent; border: none; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      color: var(--text-white);
-      font-size: 22px;
-      font-weight: 700;
-      transition: background 0.15s;
-      flex-shrink: 0;
+      color: var(--text-white); font-size: 24px; font-weight: 700; transition: background 0.15s; flex-shrink: 0;
     }
     .stepper-btn:hover { background: rgba(255,255,255,0.06); }
     .stepper-btn:disabled { color: var(--panel-border); cursor: default; }
+    .stepper-value { flex: 1; text-align: center; font-family: 'Nunito', sans-serif; font-size: 24px; font-weight: 900; color: var(--text-white); }
+    .stepper-hint { margin-top: 10px; font-size: 12.5px; font-weight: 600; color: var(--text-muted); }
 
-    .stepper-value {
-      flex: 1;
-      text-align: center;
-      font-family: 'Nunito', sans-serif;
-      font-size: 22px;
-      font-weight: 900;
-      color: var(--text-white);
-    }
-
-    .stepper-hint {
-      margin-top: 10px;
-      font-size: 12.5px;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    /* ─── Categories ─── */
-    .categories-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
+    /* Categories */
+    .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 
     .cat-card {
-      background: var(--input-bg);
-      border: 1.5px solid var(--panel-border);
-      border-radius: 16px;
-      padding: 18px 16px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      transition: border-color 0.2s, background 0.2s;
-      -webkit-tap-highlight-color: transparent;
-      position: relative;
+      background: var(--input-bg); border: 1.5px solid var(--panel-border);
+      border-radius: 16px; cursor: pointer; transition: border-color 0.2s, background 0.2s;
+      -webkit-tap-highlight-color: transparent; overflow: hidden;
     }
+    .cat-card:hover { border-color: rgba(200,241,53,0.4); }
+    .cat-card.selected { border-color: var(--lime); background: rgba(200,241,53,0.07); }
 
-    .cat-card:hover { border-color: rgba(200, 241, 53, 0.4); }
-
-    .cat-card.selected {
-      border-color: var(--lime);
-      background: rgba(200, 241, 53, 0.07);
-    }
-
-    .cat-card.selected .cat-check {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .cat-emoji {
-      font-size: 28px;
-      line-height: 1;
-    }
-
-    .cat-name {
-      font-family: 'Nunito', sans-serif;
-      font-size: 15px;
-      font-weight: 800;
-      color: var(--text-white);
-      line-height: 1.2;
-    }
-
-    .cat-desc {
-      font-size: 11.5px;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
+    .cat-main { padding: 16px 14px; display: flex; flex-direction: column; gap: 8px; position: relative; }
 
     .cat-check {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      width: 20px; height: 20px;
-      background: var(--lime);
-      border-radius: 50%;
+      position: absolute; top: 10px; right: 10px; width: 20px; height: 20px;
+      background: var(--lime); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      opacity: 0;
-      transform: scale(0.6);
-      transition: opacity 0.2s, transform 0.2s;
+      opacity: 0; transform: scale(0.6); transition: opacity 0.2s, transform 0.2s;
     }
-    .cat-check svg {
-      width: 11px; height: 11px;
-      stroke: #111; fill: none;
-      stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
-    }
+    .cat-card.selected .cat-check { opacity: 1; transform: scale(1); }
+    .cat-check svg { width: 11px; height: 11px; stroke: #111; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
-    /* ─── Sticky footer CTA ─── */
+    .cat-emoji { font-size: 26px; line-height: 1; }
+    .cat-name { font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; color: var(--text-white); }
+    .cat-desc { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+    .cat-word-count { font-size: 11px; font-weight: 700; color: var(--text-muted); margin-top: 2px; }
+    .cat-word-count span { color: var(--lime); }
+
+    /* Edit toggle */
+    .cat-edit-toggle {
+      width: 100%; background: rgba(255,255,255,0.03); border: none; border-top: 1px solid var(--panel-border);
+      padding: 8px 14px; display: flex; align-items: center; gap: 7px;
+      cursor: pointer; color: var(--text-muted); font-family: 'Nunito Sans', sans-serif;
+      font-size: 11.5px; font-weight: 700; letter-spacing: 0.03em; transition: color 0.15s, background 0.15s;
+    }
+    .cat-edit-toggle:hover { color: var(--text-white); background: rgba(255,255,255,0.05); }
+    .cat-edit-toggle svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Edit drawer */
+    .cat-editor { border-top: 1px solid var(--panel-border); padding: 14px; display: none; flex-direction: column; gap: 8px; background: rgba(0,0,0,0.15); }
+    .cat-editor.open { display: flex; }
+
+    .word-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .word-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--panel-bg); border: 1px solid var(--panel-border);
+      border-radius: 20px; padding: 4px 10px 4px 12px;
+      font-size: 12.5px; font-weight: 700; color: var(--text-white);
+    }
+    .chip-remove {
+      background: none; border: none; cursor: pointer; color: var(--text-muted);
+      font-size: 15px; line-height: 1; padding: 0; display: flex; align-items: center;
+      transition: color 0.15s;
+    }
+    .chip-remove:hover { color: var(--coral); }
+
+    .word-add-row { display: flex; gap: 8px; }
+    .word-input {
+      flex: 1; background: var(--input-bg); border: 1px solid var(--panel-border);
+      border-radius: 10px; padding: 8px 12px; color: var(--text-white);
+      font-family: 'Nunito Sans', sans-serif; font-size: 13px; font-weight: 700;
+      outline: none; caret-color: var(--lime); transition: border-color 0.2s;
+    }
+    .word-input:focus { border-color: var(--lime); }
+    .word-input::placeholder { color: var(--text-muted); font-weight: 600; }
+    .word-add-btn {
+      background: var(--lime); border: none; border-radius: 10px; padding: 8px 14px;
+      font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 900; color: #111;
+      cursor: pointer; white-space: nowrap; transition: opacity 0.15s;
+    }
+    .word-add-btn:hover { opacity: 0.85; }
+
+    /* Delete category */
+    .cat-delete-btn {
+      background: none; border: none; color: var(--coral); font-size: 11.5px; font-weight: 700;
+      cursor: pointer; padding: 0; text-align: left; opacity: 0.7; transition: opacity 0.15s;
+      font-family: 'Nunito Sans', sans-serif;
+    }
+    .cat-delete-btn:hover { opacity: 1; }
+
+    /* Add category card */
+    .add-cat-card {
+      background: transparent; border: 1.5px dashed var(--panel-border); border-radius: 16px;
+      padding: 20px 16px; cursor: pointer; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 8px; min-height: 110px;
+      transition: border-color 0.2s, color 0.2s; color: var(--text-muted);
+    }
+    .add-cat-card:hover { border-color: var(--lime); color: var(--lime); }
+    .add-cat-icon { font-size: 26px; }
+    .add-cat-label { font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800; }
+
+    /* New category form */
+    .new-cat-form {
+      display: none; flex-direction: column; gap: 12px;
+      background: var(--input-bg); border: 1.5px solid var(--lime);
+      border-radius: 16px; padding: 16px; grid-column: 1 / -1;
+    }
+    .new-cat-form.open { display: flex; }
+    .new-cat-row { display: flex; gap: 10px; align-items: center; }
+    .emoji-input {
+      width: 52px; height: 44px; text-align: center; font-size: 22px;
+      background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 10px;
+      outline: none; cursor: pointer; flex-shrink: 0;
+    }
+    .new-cat-name {
+      flex: 1; background: var(--panel-bg); border: 1px solid var(--panel-border);
+      border-radius: 10px; padding: 10px 14px; color: var(--text-white);
+      font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800;
+      outline: none; caret-color: var(--lime); transition: border-color 0.2s;
+    }
+    .new-cat-name:focus { border-color: var(--lime); }
+    .new-cat-name::placeholder { color: var(--text-muted); font-weight: 600; }
+    .new-cat-actions { display: flex; gap: 8px; }
+    .btn-cancel {
+      flex: 1; background: transparent; border: 1px solid var(--panel-border);
+      border-radius: 10px; padding: 10px; color: var(--text-muted);
+      font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800; cursor: pointer; transition: border-color 0.15s, color 0.15s;
+    }
+    .btn-cancel:hover { border-color: var(--text-muted); color: var(--text-white); }
+    .btn-create {
+      flex: 2; background: var(--lime); border: none; border-radius: 10px; padding: 10px;
+      color: #111; font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 900;
+      cursor: pointer; transition: opacity 0.15s;
+    }
+    .btn-create:hover { opacity: 0.85; }
+
+    /* Sticky footer */
     .cta-footer {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 560px;
-      padding: 16px 20px 28px;
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; max-width: 560px; padding: 16px 20px 28px;
       background: linear-gradient(to top, var(--bg) 70%, transparent);
     }
-
     .btn-primary {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      background: var(--lime);
-      color: #111;
-      border: none;
-      border-radius: 18px;
-      padding: 20px 26px;
-      font-family: 'Nunito', sans-serif;
-      font-size: 18px;
-      font-weight: 900;
-      cursor: pointer;
-      letter-spacing: -0.01em;
-      transition: transform 0.12s ease, opacity 0.12s ease;
-      -webkit-tap-highlight-color: transparent;
-      text-decoration: none;
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; background: var(--lime); color: #111; border: none;
+      border-radius: 18px; padding: 20px 26px;
+      font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 900;
+      cursor: pointer; letter-spacing: -0.01em; transition: transform 0.12s, opacity 0.12s;
+      text-decoration: none; -webkit-tap-highlight-color: transparent;
     }
     .btn-primary:hover { opacity: 0.9; }
     .btn-primary:active { transform: scale(0.97); }
-    .btn-primary:disabled {
-      background: var(--panel-bg);
-      color: var(--text-muted);
-      cursor: not-allowed;
-      opacity: 1;
-    }
+    .btn-primary:disabled { background: var(--panel-bg); color: var(--text-muted); cursor: not-allowed; opacity: 1; }
     .btn-arrow { font-size: 22px; font-weight: 900; }
 
-    /* ─── TABLET / DESKTOP ─── */
     @media (min-width: 600px) {
       body { background: #0c0d0b; padding: 40px 24px 160px; align-items: flex-start; }
-
-      .page {
-        background: var(--bg);
-        border-radius: 28px;
-        padding: 0 0 140px;
-        overflow: hidden;
-        box-shadow: 0 24px 80px rgba(0,0,0,0.6);
-      }
-
+      .page { background: var(--bg); border-radius: 28px; overflow: hidden; box-shadow: 0 24px 80px rgba(0,0,0,0.6); }
       .nav-bar { border-radius: 28px 28px 0 0; }
-
       .categories-grid { grid-template-columns: repeat(3, 1fr); }
-
-      .cta-footer {
-        border-radius: 0 0 28px 28px;
-        padding: 16px 24px 28px;
-      }
+      .cta-footer { border-radius: 0 0 28px 28px; padding: 16px 24px 28px; }
     }
-
-    @media (min-width: 1024px) {
-      body { align-items: center; min-height: 100vh; }
-    }
+    @media (min-width: 1024px) { body { align-items: center; min-height: 100vh; } }
   </style>
 </head>
 <body>
-
 <div class="page">
 
-  <!-- Nav -->
   <div class="nav-bar">
     <a class="nav-back" href="index.html">
       <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
@@ -372,40 +247,35 @@
     <div class="nav-spacer"></div>
   </div>
 
-  <!-- ── Sección 1: Jugadores ── -->
+  <!-- Jugadores -->
   <div class="section">
     <div class="section-label">Jugadores</div>
-    <div class="players-list" id="playersList">
-      <!-- generados por JS -->
-    </div>
+    <div class="players-list" id="playersList"></div>
     <button class="add-player-btn" id="addPlayerBtn" onclick="addPlayer()">
-      <span class="plus">+</span>
+      <span class="add-icon">+</span>
       <span>Agregar jugador</span>
     </button>
   </div>
 
-  <!-- ── Sección 2: Impostores ── -->
+  <!-- Impostores -->
   <div class="section">
     <div class="section-label">Cantidad de impostores</div>
     <div class="stepper">
       <button class="stepper-btn" id="decBtn" onclick="changeImpostors(-1)">−</button>
       <div class="stepper-value" id="impostorCount">1</div>
-      <button class="stepper-btn" id="incBtn" onclick="changeImpostors(1)">+</button>
+      <button class="stepper-btn" id="incBtn" onclick="changeImpostors(+1)">+</button>
     </div>
-    <p class="stepper-hint" id="impostorHint">1 impostor entre los jugadores</p>
+    <p class="stepper-hint" id="impostorHint"></p>
   </div>
 
-  <!-- ── Sección 3: Categoría ── -->
+  <!-- Categoría -->
   <div class="section">
     <div class="section-label">Categoría</div>
-    <div class="categories-grid" id="categoriesGrid">
-      <!-- generadas por JS -->
-    </div>
+    <div class="categories-grid" id="categoriesGrid"></div>
   </div>
 
-</div><!-- /page -->
+</div>
 
-<!-- Sticky CTA -->
 <div class="cta-footer">
   <button class="btn-primary" id="startBtn" onclick="startGame()" disabled>
     <span>Comenzar partida</span>
@@ -414,170 +284,327 @@
 </div>
 
 <script>
-  /* ─── Estado ─── */
-  const state = {
-    players: ['', ''],
-    impostors: 1,
-    category: null,
-  };
+/* ══════════════════════════════════════
+   DEFAULT CATEGORIES
+══════════════════════════════════════ */
+const DEFAULT_CATEGORIES = {
+  futbol:   { emoji:'⚽', name:'Fútbol',    desc:'Jugadores, clubes, torneos', builtin:true,
+              words:['Messi','Maradona','Pelé','Gol','Penal','Offside','Arquero','Mundial','Champions','Cancha','Hat-trick','Córner','Tribuna','Dribbling','Tarjeta roja'] },
+  cine:     { emoji:'🎬', name:'Cine',       desc:'Películas y personajes',     builtin:true,
+              words:['Oscar','Spielberg','Hollywood','Director','Guion','Premiere','Remake','Trilogía','Palomitas','Protagonista','Villano','Secuela','Banda sonora','Efectos especiales','Stunt'] },
+  comida:   { emoji:'🍕', name:'Comida',     desc:'Platos y sabores',           builtin:true,
+              words:['Pizza','Sushi','Asado','Hamburguesa','Empanada','Ramen','Tacos','Milanesa','Helado','Alfajor','Locro','Paella','Ravioles','Fondue','Crepe'] },
+  lugares:  { emoji:'🌍', name:'Lugares',    desc:'Ciudades y países',          builtin:true,
+              words:['Playa','Montaña','Aeropuerto','Biblioteca','Hospital','Zoológico','Supermercado','Estadio','Teatro','Museo','Casino','Iglesia','Faro','Submarino','Fábrica'] },
+  musica:   { emoji:'🎵', name:'Música',     desc:'Artistas y géneros',         builtin:true,
+              words:['Guitarra','Batería','DJ','Reggaeton','Concierto','Micrófono','Álbum','Remix','Falsete','Bajo','Sintetizador','Acústico','Tour','Estudio','Vinilo'] },
+  animales: { emoji:'🐘', name:'Animales',   desc:'Del mundo entero',           builtin:true,
+              words:['Elefante','Delfín','Pingüino','Murciélago','Camaleón','Ornitorrinco','Panda','Cocodrilo','Flamenco','Pulpo','Koala','Mantarraya','Jaguar','Axolote','Narval'] },
+  deportes: { emoji:'🏆', name:'Deportes',   desc:'Más allá del fútbol',        builtin:true,
+              words:['Básquet','Tenis','Natación','Boxeo','Ciclismo','Ski','Vóleibol','Rugby','Golf','Esgrima','Surf','Patinaje','Remo','Halterofilia','Triatlón'] },
+  series:   { emoji:'📺', name:'Series',     desc:'TV y streaming',             builtin:true,
+              words:['Breaking Bad','Stranger Things','Game of Thrones','Netflix','Spin-off','Temporada','Episodio','Cliffhanger','Villano','Clímax','Showrunner','Reboot','Doblaje','Maratón','Cancelada'] },
+  random:   { emoji:'🎲', name:'Aleatorio',  desc:'Sorpresa total',             builtin:true,
+              words:['Submarino','Faro','Acróbata','Volcán','Brújula','Alquimista','Tramposo','Fantasma','Pirata','Robot','Momia','Espía','Ninja','Vampiro','Astronauta'] },
+};
 
-  /* ─── Categorías ─── */
-  const CATEGORIES = [
-    { id: 'futbol',    emoji: '⚽', name: 'Fútbol',      desc: 'Jugadores, clubes, torneos' },
-    { id: 'cine',      emoji: '🎬', name: 'Cine',         desc: 'Películas y personajes' },
-    { id: 'comida',    emoji: '🍕', name: 'Comida',       desc: 'Platos y sabores' },
-    { id: 'lugares',   emoji: '🌍', name: 'Lugares',      desc: 'Ciudades y países' },
-    { id: 'musica',    emoji: '🎵', name: 'Música',       desc: 'Artistas y géneros' },
-    { id: 'animales',  emoji: '🐘', name: 'Animales',     desc: 'Del mundo entero' },
-    { id: 'deportes',  emoji: '🏆', name: 'Deportes',     desc: 'Más allá del fútbol' },
-    { id: 'series',    emoji: '📺', name: 'Series',       desc: 'TV y streaming' },
-    { id: 'random',    emoji: '🎲', name: 'Aleatorio',    desc: 'Sorpresa total' },
-  ];
+/* ══════════════════════════════════════
+   STORAGE
+══════════════════════════════════════ */
+const STORAGE_KEY = 'impostor_v2';
 
-  /* ─── Renderizar jugadores ─── */
-  function renderPlayers() {
-    const list = document.getElementById('playersList');
-    list.innerHTML = '';
-    state.players.forEach((name, i) => {
-      const row = document.createElement('div');
-      row.className = 'player-row';
-      row.innerHTML = `
-        <span class="player-num">${i + 1}</span>
-        <input
-          class="player-input"
-          type="text"
-          placeholder="Nombre del jugador"
-          value="${escapeHtml(name)}"
-          maxlength="20"
-          oninput="updatePlayer(${i}, this.value)"
-          autocomplete="off"
-          spellcheck="false"
-        />
-        ${state.players.length > 2
-          ? `<button class="remove-btn" onclick="removePlayer(${i})" title="Quitar jugador">×</button>`
-          : ''}
-      `;
-      list.appendChild(row);
-    });
+function loadStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return null;
+}
 
-    // Ocultar "agregar" si llegamos al máximo
-    document.getElementById('addPlayerBtn').style.display =
-      state.players.length >= 12 ? 'none' : 'flex';
+function saveStorage() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
+}
 
-    updateImpostorMax();
-    validate();
+// Init storage
+let stored = loadStorage();
+let storage = stored || {
+  config: { players: ['',''], impostors: 1, categoryId: null },
+  categories: JSON.parse(JSON.stringify(DEFAULT_CATEGORIES)),
+};
+
+// Merge missing builtin categories (in case new ones added in updates)
+Object.keys(DEFAULT_CATEGORIES).forEach(id => {
+  if (!storage.categories[id]) {
+    storage.categories[id] = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES[id]));
   }
+});
 
-  /* ─── Acciones jugadores ─── */
-  function addPlayer() {
-    if (state.players.length < 12) {
-      state.players.push('');
-      renderPlayers();
-      // foco en el nuevo input
-      const inputs = document.querySelectorAll('.player-input');
-      inputs[inputs.length - 1].focus();
-    }
-  }
+saveStorage();
 
-  function removePlayer(i) {
-    state.players.splice(i, 1);
-    // ajustar impostores si es necesario
-    const max = Math.floor(state.players.length / 2);
-    if (state.impostors > max) state.impostors = Math.max(1, max);
+/* ══════════════════════════════════════
+   STATE ALIASES
+══════════════════════════════════════ */
+const cfg = storage.config;
+const cats = storage.categories;
+
+/* ══════════════════════════════════════
+   PLAYERS
+══════════════════════════════════════ */
+function renderPlayers() {
+  const list = document.getElementById('playersList');
+  list.innerHTML = '';
+  cfg.players.forEach((name, i) => {
+    const row = document.createElement('div');
+    row.className = 'player-row';
+    row.innerHTML = `
+      <span class="player-num">${i+1}</span>
+      <input class="player-input" type="text" placeholder="Nombre del jugador"
+        value="${esc(name)}" maxlength="20" autocomplete="off" spellcheck="false"
+        oninput="updatePlayer(${i},this.value)" />
+      ${cfg.players.length > 2
+        ? `<button class="remove-btn" onclick="removePlayer(${i})">×</button>`
+        : ''}
+    `;
+    list.appendChild(row);
+  });
+  document.getElementById('addPlayerBtn').style.display = cfg.players.length >= 12 ? 'none' : 'flex';
+  updateImpostorMax();
+  validate();
+}
+
+function addPlayer() {
+  if (cfg.players.length < 12) {
+    cfg.players.push('');
+    saveStorage();
     renderPlayers();
-    renderImpostors();
+    document.querySelectorAll('.player-input')[cfg.players.length-1].focus();
   }
+}
 
-  function updatePlayer(i, val) {
-    state.players[i] = val;
-    validate();
-  }
+function removePlayer(i) {
+  cfg.players.splice(i,1);
+  saveStorage();
+  renderPlayers();
+}
 
-  /* ─── Renderizar impostores ─── */
-  function renderImpostors() {
-    document.getElementById('impostorCount').textContent = state.impostors;
-    const max = impostorMax();
-    document.getElementById('decBtn').disabled = state.impostors <= 1;
-    document.getElementById('incBtn').disabled = state.impostors >= max;
-    document.getElementById('impostorHint').textContent =
-      state.impostors === 1
-        ? '1 impostor entre los jugadores'
-        : `${state.impostors} impostores entre los jugadores`;
-  }
+function updatePlayer(i, val) {
+  cfg.players[i] = val;
+  saveStorage();
+  validate();
+}
 
-  function impostorMax() {
-    return Math.max(1, Math.floor(state.players.length / 2));
-  }
+/* ══════════════════════════════════════
+   IMPOSTORS
+══════════════════════════════════════ */
+function impostorMax() { return Math.max(1, Math.floor(cfg.players.length / 2)); }
 
-  function updateImpostorMax() {
-    const max = impostorMax();
-    if (state.impostors > max) {
-      state.impostors = max;
-    }
-    renderImpostors();
-  }
+function renderImpostors() {
+  const max = impostorMax();
+  if (cfg.impostors > max) cfg.impostors = max;
+  document.getElementById('impostorCount').textContent = cfg.impostors;
+  document.getElementById('decBtn').disabled = cfg.impostors <= 1;
+  document.getElementById('incBtn').disabled = cfg.impostors >= max;
+  document.getElementById('impostorHint').textContent =
+    cfg.impostors === 1 ? '1 impostor entre los jugadores'
+    : `${cfg.impostors} impostores entre los jugadores`;
+}
 
-  function changeImpostors(delta) {
-    const max = impostorMax();
-    state.impostors = Math.min(max, Math.max(1, state.impostors + delta));
-    renderImpostors();
-  }
+function updateImpostorMax() { renderImpostors(); }
 
-  /* ─── Renderizar categorías ─── */
-  function renderCategories() {
-    const grid = document.getElementById('categoriesGrid');
-    grid.innerHTML = '';
-    CATEGORIES.forEach(cat => {
-      const card = document.createElement('div');
-      card.className = 'cat-card' + (state.category === cat.id ? ' selected' : '');
-      card.innerHTML = `
+function changeImpostors(d) {
+  cfg.impostors = Math.min(impostorMax(), Math.max(1, cfg.impostors + d));
+  saveStorage();
+  renderImpostors();
+}
+
+/* ══════════════════════════════════════
+   CATEGORIES
+══════════════════════════════════════ */
+// tracks which drawer is open: catId or null
+let openEditorId = null;
+
+function renderCategories() {
+  const grid = document.getElementById('categoriesGrid');
+  grid.innerHTML = '';
+
+  Object.entries(cats).forEach(([id, cat]) => {
+    const isSelected = cfg.categoryId === id;
+    const isOpen = openEditorId === id;
+
+    const card = document.createElement('div');
+    card.className = 'cat-card' + (isSelected ? ' selected' : '');
+    card.dataset.id = id;
+
+    card.innerHTML = `
+      <div class="cat-main" onclick="selectCategory('${id}')">
         <div class="cat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
         <div class="cat-emoji">${cat.emoji}</div>
         <div>
-          <div class="cat-name">${cat.name}</div>
-          <div class="cat-desc">${cat.desc}</div>
+          <div class="cat-name">${esc(cat.name)}</div>
+          <div class="cat-word-count"><span>${cat.words.length}</span> palabras</div>
         </div>
-      `;
-      card.onclick = () => selectCategory(cat.id);
-      grid.appendChild(card);
-    });
-  }
+      </div>
+      <button class="cat-edit-toggle" onclick="toggleEditor('${id}')">
+        <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        ${isOpen ? 'Cerrar editor' : 'Editar palabras'}
+      </button>
+      <div class="cat-editor ${isOpen ? 'open' : ''}" id="editor_${id}">
+        <div class="word-chips" id="chips_${id}"></div>
+        <div class="word-add-row">
+          <input class="word-input" id="wordInput_${id}" type="text" placeholder="Nueva palabra..." maxlength="30"
+            onkeydown="if(event.key==='Enter') addWord('${id}')" autocomplete="off" spellcheck="false"/>
+          <button class="word-add-btn" onclick="addWord('${id}')">Agregar</button>
+        </div>
+        ${!cat.builtin ? `<button class="cat-delete-btn" onclick="deleteCategory('${id}')">🗑 Eliminar categoría</button>` : ''}
+      </div>
+    `;
+    grid.appendChild(card);
+    if (isOpen) renderChips(id);
+  });
 
-  function selectCategory(id) {
-    state.category = state.category === id ? null : id;
-    renderCategories();
-    validate();
-  }
+  // Add category card
+  const addCard = document.createElement('div');
+  addCard.className = 'add-cat-card';
+  addCard.onclick = openNewCatForm;
+  addCard.innerHTML = `<div class="add-cat-icon">＋</div><div class="add-cat-label">Nueva categoría</div>`;
+  grid.appendChild(addCard);
 
-  /* ─── Validación ─── */
-  function validate() {
-    const filled = state.players.filter(p => p.trim().length > 0);
-    const ok = filled.length >= 2 && state.category !== null;
-    document.getElementById('startBtn').disabled = !ok;
-  }
+  // New category form (hidden by default)
+  const form = document.createElement('div');
+  form.className = 'new-cat-form';
+  form.id = 'newCatForm';
+  form.innerHTML = `
+    <div class="new-cat-row">
+      <input class="emoji-input" id="newCatEmoji" type="text" placeholder="🎯" maxlength="2" />
+      <input class="new-cat-name" id="newCatName" type="text" placeholder="Nombre de la categoría" maxlength="24" />
+    </div>
+    <div class="new-cat-actions">
+      <button class="btn-cancel" onclick="closeNewCatForm()">Cancelar</button>
+      <button class="btn-create" onclick="createCategory()">Crear categoría →</button>
+    </div>
+  `;
+  grid.appendChild(form);
+}
 
-  /* ─── Comenzar partida ─── */
-  function startGame() {
-    const filled = state.players.filter(p => p.trim().length > 0);
-    // Guardar en sessionStorage para usarlo en la próxima pantalla
-    sessionStorage.setItem('gameConfig', JSON.stringify({
-      players: filled,
-      impostors: state.impostors,
-      category: state.category,
-    }));
-    window.location.href = 'turno.html';
-  }
+function renderChips(id) {
+  const container = document.getElementById(`chips_${id}`);
+  if (!container) return;
+  const words = cats[id].words;
+  container.innerHTML = words.length === 0
+    ? `<span style="font-size:12px;color:var(--text-muted);font-weight:600">Sin palabras aún</span>`
+    : words.map((w,i) => `
+      <div class="word-chip">
+        ${esc(w)}
+        <button class="chip-remove" onclick="removeWord('${id}',${i})">×</button>
+      </div>`).join('');
+}
 
-  /* ─── Utils ─── */
-  function escapeHtml(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  /* ─── Init ─── */
-  renderPlayers();
+function toggleEditor(id) {
+  openEditorId = openEditorId === id ? null : id;
   renderCategories();
-  renderImpostors();
-</script>
+  if (openEditorId) {
+    // scroll to card
+    setTimeout(() => {
+      const el = document.querySelector(`[data-id="${openEditorId}"]`);
+      if (el) el.scrollIntoView({ behavior:'smooth', block:'nearest' });
+    }, 50);
+  }
+}
 
+function selectCategory(id) {
+  cfg.categoryId = cfg.categoryId === id ? null : id;
+  saveStorage();
+  renderCategories();
+  validate();
+}
+
+function addWord(id) {
+  const input = document.getElementById(`wordInput_${id}`);
+  const val = input.value.trim();
+  if (!val) return;
+  if (!cats[id].words.includes(val)) {
+    cats[id].words.push(val);
+    saveStorage();
+  }
+  input.value = '';
+  renderChips(id);
+  renderCategories();  // update word count
+  // restore editor open
+  openEditorId = id;
+  renderCategories();
+}
+
+function removeWord(id, idx) {
+  cats[id].words.splice(idx, 1);
+  saveStorage();
+  renderChips(id);
+  renderCategories();
+  openEditorId = id;
+  renderCategories();
+}
+
+function deleteCategory(id) {
+  if (!confirm(`¿Eliminar la categoría "${cats[id].name}"?`)) return;
+  delete cats[id];
+  if (cfg.categoryId === id) cfg.categoryId = null;
+  openEditorId = null;
+  saveStorage();
+  renderCategories();
+  validate();
+}
+
+/* ── New category form ── */
+function openNewCatForm() {
+  const form = document.getElementById('newCatForm');
+  if (form) { form.classList.add('open'); document.getElementById('newCatName').focus(); }
+}
+
+function closeNewCatForm() {
+  const form = document.getElementById('newCatForm');
+  if (form) { form.classList.remove('open'); }
+}
+
+function createCategory() {
+  const emoji = document.getElementById('newCatEmoji').value.trim() || '🎯';
+  const name  = document.getElementById('newCatName').value.trim();
+  if (!name) { document.getElementById('newCatName').focus(); return; }
+  const id = 'custom_' + Date.now();
+  cats[id] = { emoji, name, desc: 'Categoría personalizada', builtin: false, words: [] };
+  saveStorage();
+  openEditorId = id;
+  renderCategories();
+  closeNewCatForm();
+}
+
+/* ══════════════════════════════════════
+   VALIDATION & START
+══════════════════════════════════════ */
+function validate() {
+  const filled = cfg.players.filter(p => p.trim());
+  const ok = filled.length >= 2 && cfg.categoryId && (cats[cfg.categoryId]?.words.length > 0);
+  document.getElementById('startBtn').disabled = !ok;
+}
+
+function startGame() {
+  const filled = cfg.players.filter(p => p.trim());
+  if (filled.length < 2 || !cfg.categoryId) return;
+  cfg.players = filled; // clean up empties
+  saveStorage();
+  window.location.href = 'turno.html';
+}
+
+/* ══════════════════════════════════════
+   UTILS
+══════════════════════════════════════ */
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ── Init ── */
+renderPlayers();
+renderImpostors();
+renderCategories();
+validate();
+</script>
 </body>
 </html>

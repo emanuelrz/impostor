@@ -134,16 +134,22 @@
       flex: 1; padding: 40px 28px; text-align: center; gap: 0;
     }
     .finish-emoji { font-size: 64px; margin-bottom: 24px; }
-    .finish-title { font-family: 'Nunito', sans-serif; font-size: 32px; font-weight: 900; color: var(--text-white); letter-spacing: -0.02em; margin-bottom: 10px; }
-    .finish-sub { font-size: 15px; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; line-height: 1.5; }
-    .finish-word-reveal { margin: 24px 0; background: var(--panel-bg); border-radius: 16px; padding: 16px 24px; text-align: center; }
-    .finish-word-label { font-size: 11px; font-weight: 800; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
-    .finish-word { font-family: 'Nunito', sans-serif; font-size: 32px; font-weight: 900; color: var(--lime); letter-spacing: -0.02em; text-transform: uppercase; }
-    .finish-impostors { margin-bottom: 32px; background: var(--panel-bg); border-radius: 16px; padding: 14px 20px; text-align: left; width: 100%; }
-    .finish-imp-label { font-size: 11px; font-weight: 800; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
-    .finish-imp-list { display: flex; flex-direction: column; gap: 8px; }
-    .finish-imp-item { display: flex; align-items: center; gap: 10px; font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800; color: var(--coral); }
-    .finish-imp-item::before { content: ''; display: block; width: 8px; height: 8px; border-radius: 50%; background: var(--coral); flex-shrink: 0; }
+    .finish-title { font-family: 'Nunito', sans-serif; font-size: 36px; font-weight: 900; color: var(--text-white); letter-spacing: -0.02em; margin-bottom: 10px; line-height: 1.1; }
+    .finish-sub { font-size: 15px; font-weight: 600; color: var(--text-muted); margin-bottom: 32px; line-height: 1.6; }
+
+    .finish-rules { width: 100%; display: flex; flex-direction: column; gap: 12px; margin-bottom: 36px; }
+    .finish-rule {
+      display: flex; align-items: flex-start; gap: 14px;
+      background: var(--panel-bg); border-radius: 14px; padding: 14px 16px;
+      text-align: left;
+    }
+    .finish-rule-num {
+      font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 900;
+      color: var(--lime); flex-shrink: 0; width: 24px; padding-top: 1px;
+    }
+    .finish-rule-text { font-size: 14px; font-weight: 600; color: var(--text-muted); line-height: 1.4; }
+    .finish-rule-text strong { color: var(--text-white); font-weight: 800; }
+
     .btn-replay {
       width: 100%; background: var(--lime); color: #111; border: none; border-radius: 18px;
       padding: 20px 26px; display: flex; align-items: center; justify-content: space-between;
@@ -151,14 +157,6 @@
       cursor: pointer; transition: opacity 0.15s; text-decoration: none; -webkit-tap-highlight-color: transparent;
     }
     .btn-replay:hover { opacity: 0.9; }
-    .btn-secondary {
-      margin-top: 12px; width: 100%; background: transparent;
-      border: 1px solid var(--panel-border); border-radius: 18px; padding: 16px 26px;
-      font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800; color: var(--text-muted);
-      cursor: pointer; transition: border-color 0.15s, color 0.15s; text-decoration: none;
-      display: block; text-align: center;
-    }
-    .btn-secondary:hover { border-color: var(--text-muted); color: var(--text-white); }
 
     /* Transition animation */
     .fade-in { animation: fadeIn 0.3s ease; }
@@ -240,24 +238,28 @@
   <!-- ── FINISH SCREEN ── -->
   <div id="finishScreen">
     <div class="finish-emoji">🕵️</div>
-    <div class="finish-title">¡Todos listos!</div>
-    <div class="finish-sub">Ya saben sus roles.<br>Ahora empieza el juego.</div>
+    <div class="finish-title">¡Que empiece<br>el juego!</div>
+    <div class="finish-sub">Todos ya saben su rol.<br>Hablen, den pistas y descubran<br>quién está fingiendo.</div>
 
-    <div class="finish-word-reveal">
-      <div class="finish-word-label">La palabra secreta es</div>
-      <div class="finish-word" id="finishWord"></div>
+    <div class="finish-rules">
+      <div class="finish-rule">
+        <div class="finish-rule-num">1</div>
+        <div class="finish-rule-text">Cada uno da <strong>una pista</strong> sobre la palabra sin decirla</div>
+      </div>
+      <div class="finish-rule">
+        <div class="finish-rule-num">2</div>
+        <div class="finish-rule-text">Voten quién creen que es <strong>el impostor</strong></div>
+      </div>
+      <div class="finish-rule">
+        <div class="finish-rule-num">3</div>
+        <div class="finish-rule-text">El impostor gana si <strong>adivina la palabra</strong> al ser descubierto</div>
+      </div>
     </div>
 
-    <div class="finish-impostors">
-      <div class="finish-imp-label">Impostores</div>
-      <div class="finish-imp-list" id="finishImpostorList"></div>
-    </div>
-
-    <button class="btn-replay" onclick="window.location.href='turno.html'">
-      <span>Jugar de nuevo</span>
+    <button class="btn-replay" onclick="window.location.href='setup.html'">
+      <span>Nueva partida</span>
       <span>→</span>
     </button>
-    <a class="btn-secondary" href="setup.html">Cambiar configuración</a>
   </div>
 
 </div>
@@ -423,13 +425,6 @@ function showFinish() {
   document.getElementById('cardScreen').style.display = 'none';
   document.getElementById('finishScreen').style.display = 'flex';
   document.getElementById('finishScreen').classList.add('fade-in');
-
-  document.getElementById('finishWord').textContent = secretWord;
-
-  const list = document.getElementById('finishImpostorList');
-  list.innerHTML = [...impostorIdxs]
-    .map(i => `<div class="finish-imp-item">${players[i]}</div>`)
-    .join('');
 }
 
 /* ── Init ── */

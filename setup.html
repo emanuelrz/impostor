@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Impostor – Nueva partida</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #111210;
+      --lime: #c8f135;
+      --coral: #f4634a;
+      --text-white: #f5f5f0;
+      --text-muted: #9a9a8e;
+      --panel-bg: #1a1b18;
+      --panel-border: #272824;
+      --input-bg: #1e1f1c;
+    }
+
+    html { font-family: 'Nunito Sans', system-ui, sans-serif; background: var(--bg); }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      display: flex;
+      justify-content: center;
+      color: var(--text-white);
+    }
+
+    .page {
+      width: 100%;
+      max-width: 560px;
+      padding: 0 0 120px; /* space for sticky footer */
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── Nav ─── */
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 20px 0;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 20;
+    }
+
+    .nav-back {
+      width: 36px; height: 36px;
+      background: var(--input-bg);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; text-decoration: none;
+      transition: opacity 0.15s;
+      flex-shrink: 0;
+    }
+    .nav-back:hover { opacity: 0.7; }
+    .nav-back svg { width: 16px; height: 16px; stroke: var(--text-white); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+    .nav-title {
+      font-family: 'Nunito', sans-serif;
+      font-size: 16px; font-weight: 900;
+      color: var(--text-white);
+      letter-spacing: -0.01em;
+    }
+
+    .nav-spacer { width: 36px; }
+
+    /* ─── Sections ─── */
+    .section {
+      padding: 28px 20px 0;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    /* ─── Players ─── */
+    .players-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .player-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--input-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 14px;
+      padding: 0 14px 0 16px;
+      height: 52px;
+      transition: border-color 0.2s;
+    }
+
+    .player-row:focus-within {
+      border-color: var(--lime);
+    }
+
+    .player-num {
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text-muted);
+      width: 20px;
+      flex-shrink: 0;
+    }
+
+    .player-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: 'Nunito Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-white);
+      caret-color: var(--lime);
+    }
+
+    .player-input::placeholder { color: var(--text-muted); font-weight: 600; }
+
+    .remove-btn {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted);
+      font-size: 18px;
+      line-height: 1;
+      transition: color 0.15s, background 0.15s;
+      flex-shrink: 0;
+      padding: 0;
+    }
+    .remove-btn:hover { color: var(--coral); background: rgba(244,99,74,0.1); }
+
+    .add-player-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      border: 1.5px dashed var(--panel-border);
+      border-radius: 14px;
+      padding: 0 16px;
+      height: 52px;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-family: 'Nunito Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      width: 100%;
+      transition: border-color 0.2s, color 0.2s;
+      margin-top: 10px;
+    }
+    .add-player-btn:hover { border-color: var(--lime); color: var(--lime); }
+
+    .add-player-btn .plus {
+      width: 24px; height: 24px;
+      background: var(--input-bg);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    /* ─── Impostors ─── */
+    .stepper {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: var(--input-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 14px;
+      overflow: hidden;
+      height: 56px;
+    }
+
+    .stepper-btn {
+      width: 56px; height: 56px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-white);
+      font-size: 22px;
+      font-weight: 700;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+    .stepper-btn:hover { background: rgba(255,255,255,0.06); }
+    .stepper-btn:disabled { color: var(--panel-border); cursor: default; }
+
+    .stepper-value {
+      flex: 1;
+      text-align: center;
+      font-family: 'Nunito', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--text-white);
+    }
+
+    .stepper-hint {
+      margin-top: 10px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* ─── Categories ─── */
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .cat-card {
+      background: var(--input-bg);
+      border: 1.5px solid var(--panel-border);
+      border-radius: 16px;
+      padding: 18px 16px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color 0.2s, background 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+    }
+
+    .cat-card:hover { border-color: rgba(200, 241, 53, 0.4); }
+
+    .cat-card.selected {
+      border-color: var(--lime);
+      background: rgba(200, 241, 53, 0.07);
+    }
+
+    .cat-card.selected .cat-check {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .cat-emoji {
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .cat-name {
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-white);
+      line-height: 1.2;
+    }
+
+    .cat-desc {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .cat-check {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 20px; height: 20px;
+      background: var(--lime);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .cat-check svg {
+      width: 11px; height: 11px;
+      stroke: #111; fill: none;
+      stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* ─── Sticky footer CTA ─── */
+    .cta-footer {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 560px;
+      padding: 16px 20px 28px;
+      background: linear-gradient(to top, var(--bg) 70%, transparent);
+    }
+
+    .btn-primary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      background: var(--lime);
+      color: #111;
+      border: none;
+      border-radius: 18px;
+      padding: 20px 26px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      letter-spacing: -0.01em;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+      -webkit-tap-highlight-color: transparent;
+      text-decoration: none;
+    }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-primary:active { transform: scale(0.97); }
+    .btn-primary:disabled {
+      background: var(--panel-bg);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      opacity: 1;
+    }
+    .btn-arrow { font-size: 22px; font-weight: 900; }
+
+    /* ─── TABLET / DESKTOP ─── */
+    @media (min-width: 600px) {
+      body { background: #0c0d0b; padding: 40px 24px 160px; align-items: flex-start; }
+
+      .page {
+        background: var(--bg);
+        border-radius: 28px;
+        padding: 0 0 140px;
+        overflow: hidden;
+        box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+      }
+
+      .nav-bar { border-radius: 28px 28px 0 0; }
+
+      .categories-grid { grid-template-columns: repeat(3, 1fr); }
+
+      .cta-footer {
+        border-radius: 0 0 28px 28px;
+        padding: 16px 24px 28px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      body { align-items: center; min-height: 100vh; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Nav -->
+  <div class="nav-bar">
+    <a class="nav-back" href="index.html">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </a>
+    <span class="nav-title">Nueva partida</span>
+    <div class="nav-spacer"></div>
+  </div>
+
+  <!-- ── Sección 1: Jugadores ── -->
+  <div class="section">
+    <div class="section-label">Jugadores</div>
+    <div class="players-list" id="playersList">
+      <!-- generados por JS -->
+    </div>
+    <button class="add-player-btn" id="addPlayerBtn" onclick="addPlayer()">
+      <span class="plus">+</span>
+      <span>Agregar jugador</span>
+    </button>
+  </div>
+
+  <!-- ── Sección 2: Impostores ── -->
+  <div class="section">
+    <div class="section-label">Cantidad de impostores</div>
+    <div class="stepper">
+      <button class="stepper-btn" id="decBtn" onclick="changeImpostors(-1)">−</button>
+      <div class="stepper-value" id="impostorCount">1</div>
+      <button class="stepper-btn" id="incBtn" onclick="changeImpostors(1)">+</button>
+    </div>
+    <p class="stepper-hint" id="impostorHint">1 impostor entre los jugadores</p>
+  </div>
+
+  <!-- ── Sección 3: Categoría ── -->
+  <div class="section">
+    <div class="section-label">Categoría</div>
+    <div class="categories-grid" id="categoriesGrid">
+      <!-- generadas por JS -->
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- Sticky CTA -->
+<div class="cta-footer">
+  <button class="btn-primary" id="startBtn" onclick="startGame()" disabled>
+    <span>Comenzar partida</span>
+    <span class="btn-arrow">→</span>
+  </button>
+</div>
+
+<script>
+  /* ─── Estado ─── */
+  const state = {
+    players: ['', ''],
+    impostors: 1,
+    category: null,
+  };
+
+  /* ─── Categorías ─── */
+  const CATEGORIES = [
+    { id: 'futbol',    emoji: '⚽', name: 'Fútbol',      desc: 'Jugadores, clubes, torneos' },
+    { id: 'cine',      emoji: '🎬', name: 'Cine',         desc: 'Películas y personajes' },
+    { id: 'comida',    emoji: '🍕', name: 'Comida',       desc: 'Platos y sabores' },
+    { id: 'lugares',   emoji: '🌍', name: 'Lugares',      desc: 'Ciudades y países' },
+    { id: 'musica',    emoji: '🎵', name: 'Música',       desc: 'Artistas y géneros' },
+    { id: 'animales',  emoji: '🐘', name: 'Animales',     desc: 'Del mundo entero' },
+    { id: 'deportes',  emoji: '🏆', name: 'Deportes',     desc: 'Más allá del fútbol' },
+    { id: 'series',    emoji: '📺', name: 'Series',       desc: 'TV y streaming' },
+    { id: 'random',    emoji: '🎲', name: 'Aleatorio',    desc: 'Sorpresa total' },
+  ];
+
+  /* ─── Renderizar jugadores ─── */
+  function renderPlayers() {
+    const list = document.getElementById('playersList');
+    list.innerHTML = '';
+    state.players.forEach((name, i) => {
+      const row = document.createElement('div');
+      row.className = 'player-row';
+      row.innerHTML = `
+        <span class="player-num">${i + 1}</span>
+        <input
+          class="player-input"
+          type="text"
+          placeholder="Nombre del jugador"
+          value="${escapeHtml(name)}"
+          maxlength="20"
+          oninput="updatePlayer(${i}, this.value)"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        ${state.players.length > 2
+          ? `<button class="remove-btn" onclick="removePlayer(${i})" title="Quitar jugador">×</button>`
+          : ''}
+      `;
+      list.appendChild(row);
+    });
+
+    // Ocultar "agregar" si llegamos al máximo
+    document.getElementById('addPlayerBtn').style.display =
+      state.players.length >= 12 ? 'none' : 'flex';
+
+    updateImpostorMax();
+    validate();
+  }
+
+  /* ─── Acciones jugadores ─── */
+  function addPlayer() {
+    if (state.players.length < 12) {
+      state.players.push('');
+      renderPlayers();
+      // foco en el nuevo input
+      const inputs = document.querySelectorAll('.player-input');
+      inputs[inputs.length - 1].focus();
+    }
+  }
+
+  function removePlayer(i) {
+    state.players.splice(i, 1);
+    // ajustar impostores si es necesario
+    const max = Math.floor(state.players.length / 2);
+    if (state.impostors > max) state.impostors = Math.max(1, max);
+    renderPlayers();
+    renderImpostors();
+  }
+
+  function updatePlayer(i, val) {
+    state.players[i] = val;
+    validate();
+  }
+
+  /* ─── Renderizar impostores ─── */
+  function renderImpostors() {
+    document.getElementById('impostorCount').textContent = state.impostors;
+    const max = impostorMax();
+    document.getElementById('decBtn').disabled = state.impostors <= 1;
+    document.getElementById('incBtn').disabled = state.impostors >= max;
+    document.getElementById('impostorHint').textContent =
+      state.impostors === 1
+        ? '1 impostor entre los jugadores'
+        : `${state.impostors} impostores entre los jugadores`;
+  }
+
+  function impostorMax() {
+    return Math.max(1, Math.floor(state.players.length / 2));
+  }
+
+  function updateImpostorMax() {
+    const max = impostorMax();
+    if (state.impostors > max) {
+      state.impostors = max;
+    }
+    renderImpostors();
+  }
+
+  function changeImpostors(delta) {
+    const max = impostorMax();
+    state.impostors = Math.min(max, Math.max(1, state.impostors + delta));
+    renderImpostors();
+  }
+
+  /* ─── Renderizar categorías ─── */
+  function renderCategories() {
+    const grid = document.getElementById('categoriesGrid');
+    grid.innerHTML = '';
+    CATEGORIES.forEach(cat => {
+      const card = document.createElement('div');
+      card.className = 'cat-card' + (state.category === cat.id ? ' selected' : '');
+      card.innerHTML = `
+        <div class="cat-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="cat-emoji">${cat.emoji}</div>
+        <div>
+          <div class="cat-name">${cat.name}</div>
+          <div class="cat-desc">${cat.desc}</div>
+        </div>
+      `;
+      card.onclick = () => selectCategory(cat.id);
+      grid.appendChild(card);
+    });
+  }
+
+  function selectCategory(id) {
+    state.category = state.category === id ? null : id;
+    renderCategories();
+    validate();
+  }
+
+  /* ─── Validación ─── */
+  function validate() {
+    const filled = state.players.filter(p => p.trim().length > 0);
+    const ok = filled.length >= 2 && state.category !== null;
+    document.getElementById('startBtn').disabled = !ok;
+  }
+
+  /* ─── Comenzar partida ─── */
+  function startGame() {
+    const filled = state.players.filter(p => p.trim().length > 0);
+    // Guardar en sessionStorage para usarlo en la próxima pantalla
+    sessionStorage.setItem('gameConfig', JSON.stringify({
+      players: filled,
+      impostors: state.impostors,
+      category: state.category,
+    }));
+    window.location.href = 'turno.html';
+  }
+
+  /* ─── Utils ─── */
+  function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* ─── Init ─── */
+  renderPlayers();
+  renderCategories();
+  renderImpostors();
+</script>
+
+</body>
+</html>

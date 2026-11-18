@@ -2,13 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Impostor</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
-    /* ─── Reset & Base ─── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -16,41 +15,25 @@
       --lime: #c8f135;
       --coral: #f4634a;
       --card-green: #b5e04e;
-      --card-green-dark: #a8d040;
       --text-white: #f5f5f0;
       --text-muted: #9a9a8e;
       --panel-bg: #1e1f1c;
       --panel-border: #2a2b27;
     }
 
-    html, body {
-      height: 100%;
-      background: var(--bg);
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
+    html {
       font-family: 'Nunito Sans', system-ui, sans-serif;
-    }
-
-    /* ─── Phone shell ─── */
-    .phone {
-      width: 100%;
-      min-height: 100vh;
-      min-height: 100dvh;
       background: var(--bg);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
-      padding-bottom: 24px;
+      min-height: 100%;
     }
 
-    @media (min-width: 500px) {
-      body { background: #0a0a0a; }
-      .phone { max-width: 390px; }
+    body {
+      min-height: 100vh;
+      background: var(--bg);
     }
 
-    /* ─── Status bar ─── */
+    /* ─── MOBILE (base) ─── */
+
     .status-bar {
       display: flex;
       justify-content: space-between;
@@ -58,30 +41,15 @@
       padding: 14px 24px 0;
       height: 48px;
     }
-
     .status-time {
-      font-family: 'Nunito Sans', sans-serif;
       font-size: 15px;
       font-weight: 700;
       color: var(--text-white);
-      letter-spacing: 0.01em;
     }
+    .status-icons { display: flex; align-items: center; gap: 7px; }
+    .status-icons svg { fill: var(--text-white); }
 
-    .status-icons {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .status-icons svg {
-      fill: var(--text-white);
-    }
-
-    /* ─── Header ─── */
-    .header {
-      padding: 10px 24px 0;
-    }
-
+    .header { padding: 10px 24px 0; }
     .brand {
       font-family: 'Nunito', sans-serif;
       font-size: 15px;
@@ -91,11 +59,7 @@
       text-transform: uppercase;
     }
 
-    /* ─── Hero text ─── */
-    .hero {
-      padding: 20px 24px 0;
-    }
-
+    .hero { padding: 20px 24px 0; }
     .hero-title {
       font-family: 'Nunito', sans-serif;
       font-size: 34px;
@@ -104,17 +68,12 @@
       line-height: 1.08;
       letter-spacing: -0.02em;
     }
-
-    .hero-title .accent {
-      color: var(--lime);
-    }
-
+    .hero-title .accent { color: var(--lime); }
     .hero-sub {
       margin-top: 10px;
       font-size: 13.5px;
       font-weight: 600;
       color: var(--text-muted);
-      letter-spacing: 0.01em;
     }
 
     /* ─── Cards area ─── */
@@ -125,7 +84,6 @@
       flex-shrink: 0;
     }
 
-    /* Back card (coral / red) */
     .card {
       position: absolute;
       border-radius: 18px;
@@ -143,7 +101,6 @@
       padding: 16px 18px;
       justify-content: space-between;
     }
-
     .card-coral .card-label {
       font-family: 'Nunito', sans-serif;
       font-size: 11px;
@@ -152,7 +109,6 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
-
     .card-coral .question-mark {
       font-family: 'Nunito', sans-serif;
       font-size: 110px;
@@ -165,7 +121,6 @@
       margin-right: -4px;
     }
 
-    /* Front card (lime green) */
     .card-green {
       width: 185px;
       height: 215px;
@@ -178,7 +133,6 @@
       box-shadow: 0 8px 32px rgba(0,0,0,0.45);
       z-index: 2;
     }
-
     .card-green .card-label {
       font-family: 'Nunito', sans-serif;
       font-size: 11px;
@@ -187,20 +141,8 @@
       letter-spacing: 0.1em;
       text-transform: uppercase;
     }
-
-    .dots {
-      display: flex;
-      gap: 7px;
-      margin-top: 20px;
-    }
-
-    .dot {
-      width: 11px;
-      height: 11px;
-      border-radius: 50%;
-      background: #1a1a1a;
-    }
-
+    .dots { display: flex; gap: 7px; margin-top: 20px; }
+    .dot { width: 11px; height: 11px; border-radius: 50%; background: #1a1a1a; }
     .card-text {
       font-family: 'Nunito', sans-serif;
       font-size: 17px;
@@ -212,7 +154,6 @@
       margin-top: auto;
     }
 
-    /* "¿Quién finge?" badge */
     .badge {
       position: absolute;
       bottom: 10px;
@@ -237,40 +178,20 @@
       padding: 16px 20px;
       display: flex;
       align-items: center;
-      gap: 0;
     }
-
     .info-item {
       flex: 1;
       display: flex;
       align-items: center;
       gap: 10px;
     }
-
     .info-item + .info-item {
       border-left: 1px solid var(--panel-border);
       padding-left: 20px;
     }
-
-    .info-icon {
-      flex-shrink: 0;
-      width: 28px;
-      height: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .info-icon svg {
-      width: 24px;
-      height: 24px;
-    }
-
-    .info-text {
-      display: flex;
-      flex-direction: column;
-    }
-
+    .info-icon { flex-shrink: 0; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
+    .info-icon svg { width: 24px; height: 24px; }
+    .info-text { display: flex; flex-direction: column; }
     .info-value {
       font-family: 'Nunito', sans-serif;
       font-size: 17px;
@@ -279,19 +200,10 @@
       letter-spacing: -0.01em;
       line-height: 1.1;
     }
+    .info-label { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-top: 2px; }
 
-    .info-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    /* ─── CTA Button ─── */
-    .cta-wrap {
-      padding: 22px 20px 0;
-    }
-
+    /* ─── CTA ─── */
+    .cta-wrap { padding: 22px 20px 0; }
     .btn-primary {
       display: flex;
       align-items: center;
@@ -307,22 +219,14 @@
       font-weight: 900;
       cursor: pointer;
       letter-spacing: -0.01em;
-      transition: transform 0.12s ease, box-shadow 0.12s ease;
+      transition: transform 0.12s ease, opacity 0.12s ease;
       -webkit-tap-highlight-color: transparent;
+      text-decoration: none;
     }
+    .btn-primary:hover { opacity: 0.92; }
+    .btn-primary:active { transform: scale(0.97); }
+    .btn-arrow { font-size: 22px; font-weight: 900; line-height: 1; }
 
-    .btn-primary:active {
-      transform: scale(0.97);
-      box-shadow: 0 2px 12px rgba(200, 241, 53, 0.25);
-    }
-
-    .btn-arrow {
-      font-size: 22px;
-      font-weight: 900;
-      line-height: 1;
-    }
-
-    /* ─── How to play link ─── */
     .how-to {
       margin-top: 18px;
       display: flex;
@@ -330,9 +234,7 @@
       justify-content: center;
       gap: 7px;
       cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
     }
-
     .how-to-icon {
       width: 18px;
       height: 18px;
@@ -343,22 +245,9 @@
       justify-content: center;
       flex-shrink: 0;
     }
+    .how-to-icon span { font-size: 11px; font-weight: 800; color: var(--text-muted); line-height: 1; }
+    .how-to-text { font-size: 14px; font-weight: 700; color: var(--text-white); }
 
-    .how-to-icon span {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--text-muted);
-      line-height: 1;
-    }
-
-    .how-to-text {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text-white);
-      letter-spacing: 0.01em;
-    }
-
-    /* ─── Footer note ─── */
     .footer-note {
       margin-top: 24px;
       text-align: center;
@@ -367,145 +256,205 @@
       color: var(--text-muted);
       letter-spacing: 0.08em;
       text-transform: uppercase;
+      padding: 0 20px;
     }
 
-    /* ─── Home indicator ─── */
-    .home-indicator {
-      margin-top: 20px;
-      display: flex;
-      justify-content: center;
+    .home-indicator { margin-top: 20px; display: flex; justify-content: center; }
+    .home-indicator-bar { width: 120px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 3px; }
+
+    /* ─── TABLET (600px+) ─── */
+    @media (min-width: 600px) {
+      body {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 40px 24px;
+        background: #0c0d0b;
+        min-height: 100vh;
+      }
+
+      .wrapper {
+        width: 100%;
+        max-width: 900px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+        gap: 0 48px;
+        align-items: start;
+      }
+
+      .status-bar { display: none; }
+
+      .col-left {
+        display: flex;
+        flex-direction: column;
+        padding-top: 20px;
+      }
+
+      .col-right {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .header { padding: 0 0 0 0; }
+      .brand { font-size: 18px; }
+
+      .hero { padding: 20px 0 0; }
+      .hero-title { font-size: 48px; }
+      .hero-sub { font-size: 16px; margin-top: 12px; }
+
+      .cards-area {
+        margin: 32px 0 0;
+        height: 300px;
+      }
+
+      .card-coral { width: 220px; height: 270px; }
+      .card-coral .question-mark { font-size: 140px; }
+      .card-green { width: 230px; height: 265px; }
+      .card-green .card-label { font-size: 13px; }
+      .card-text { font-size: 20px; }
+      .dot { width: 13px; height: 13px; }
+      .badge { font-size: 14px; padding: 8px 16px; right: 60px; bottom: 14px; }
+
+      .info-panel { margin: 0; border-radius: 20px; padding: 20px 24px; }
+      .info-value { font-size: 20px; }
+      .info-label { font-size: 13px; }
+
+      .cta-wrap { padding: 0; }
+      .btn-primary { font-size: 20px; padding: 22px 28px; border-radius: 20px; }
+
+      .how-to { margin-top: 16px; }
+      .how-to-text { font-size: 15px; }
+
+      .footer-note { font-size: 11px; margin-top: 20px; padding: 0; }
+      .home-indicator { display: none; }
     }
 
-    .home-indicator-bar {
-      width: 120px;
-      height: 5px;
-      background: rgba(255,255,255,0.25);
-      border-radius: 3px;
+    /* ─── DESKTOP (1024px+) ─── */
+    @media (min-width: 1024px) {
+      body { padding: 60px 48px; align-items: center; min-height: 100vh; }
+
+      .wrapper { max-width: 1100px; gap: 0 80px; }
+
+      .hero-title { font-size: 58px; }
+      .hero-sub { font-size: 18px; }
+
+      .cards-area { height: 340px; margin-top: 40px; }
+      .card-coral { width: 250px; height: 310px; }
+      .card-coral .question-mark { font-size: 160px; }
+      .card-green { width: 260px; height: 300px; }
+      .card-text { font-size: 22px; }
+      .dot { width: 14px; height: 14px; }
+
+      .info-value { font-size: 22px; }
+      .btn-primary { font-size: 22px; }
     }
-
-    /* ─── Responsive: full-bleed on actual phones ─── */
-
   </style>
 </head>
 <body>
-  <div class="phone">
 
-    <!-- Status bar -->
-    <div class="status-bar">
-      <span class="status-time">9:41</span>
-      <div class="status-icons">
-        <!-- Signal bars -->
-        <svg width="17" height="13" viewBox="0 0 17 13" xmlns="http://www.w3.org/2000/svg">
-          <rect x="0" y="8" width="3" height="5" rx="0.8"/>
-          <rect x="4.5" y="5" width="3" height="8" rx="0.8"/>
-          <rect x="9" y="2" width="3" height="11" rx="0.8"/>
-          <rect x="13.5" y="0" width="3" height="13" rx="0.8"/>
-        </svg>
-        <!-- WiFi -->
-        <svg width="16" height="13" viewBox="0 0 16 13" xmlns="http://www.w3.org/2000/svg">
-          <path d="M8 10.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"/>
-          <path d="M3.5 7.2A6.4 6.4 0 0 1 8 5.5c1.8 0 3.4.7 4.5 1.7" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-          <path d="M1 4A9.9 9.9 0 0 1 8 1c2.8 0 5.3 1.1 7 2.9" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        </svg>
-        <!-- Battery -->
-        <svg width="25" height="13" viewBox="0 0 25 13" xmlns="http://www.w3.org/2000/svg">
-          <rect x="0" y="1" width="22" height="11" rx="2.5" stroke="white" stroke-width="1.2" fill="none"/>
-          <rect x="22.5" y="4" width="2" height="5" rx="1"/>
-          <rect x="1.5" y="2.5" width="17" height="8" rx="1.5"/>
-        </svg>
-      </div>
-    </div>
+  <!-- Mobile: flat layout. Tablet/Desktop: .wrapper grid -->
+  <div class="wrapper">
+    <div class="col-left">
 
-    <!-- Brand header -->
-    <div class="header">
-      <div class="brand">Impostor</div>
-    </div>
-
-    <!-- Hero text -->
-    <div class="hero">
-      <h1 class="hero-title">
-        No confies en nadie<br>
-        <span class="accent">Ni en tus amigos.</span>
-      </h1>
-      <p class="hero-sub">Una palabra. Un impostor.</p>
-    </div>
-
-    <!-- Cards -->
-    <div class="cards-area">
-      <!-- Coral card (back) -->
-      <div class="card card-coral">
-        <span class="card-label">¿Eres tú?</span>
-        <div class="question-mark">?</div>
-      </div>
-
-      <!-- Green card (front) -->
-      <div class="card card-green">
-        <span class="card-label">Top Secret</span>
-        <div class="dots">
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-        </div>
-        <div class="card-text">Tú sí sabes<br>la palabra.</div>
-      </div>
-
-      <!-- Badge -->
-      <div class="badge">¿Quién finge?</div>
-    </div>
-
-    <!-- Info panel -->
-    <div class="info-panel">
-      <div class="info-item">
-        <div class="info-icon">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="8" cy="8" r="3" stroke="#9a9a8e" stroke-width="1.8"/>
-            <circle cx="16" cy="8" r="3" stroke="#9a9a8e" stroke-width="1.8"/>
-            <path d="M2 20c0-3.3 2.7-6 6-6h8c3.3 0 6 2.7 6 6" stroke="#9a9a8e" stroke-width="1.8" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="info-text">
-          <span class="info-value">4–12</span>
-          <span class="info-label">jugadores</span>
+      <!-- Status bar (mobile only) -->
+      <div class="status-bar">
+        <span class="status-time">9:41</span>
+        <div class="status-icons">
+          <svg width="17" height="13" viewBox="0 0 17 13"><rect x="0" y="8" width="3" height="5" rx="0.8"/><rect x="4.5" y="5" width="3" height="8" rx="0.8"/><rect x="9" y="2" width="3" height="11" rx="0.8"/><rect x="13.5" y="0" width="3" height="13" rx="0.8"/></svg>
+          <svg width="16" height="13" viewBox="0 0 16 13"><circle cx="8" cy="11.5" r="1.5"/><path d="M3.5 7.2A6.4 6.4 0 0 1 8 5.5c1.8 0 3.4.7 4.5 1.7" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M1 4A9.9 9.9 0 0 1 8 1c2.8 0 5.3 1.1 7 2.9" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+          <svg width="25" height="13" viewBox="0 0 25 13"><rect x="0" y="1" width="22" height="11" rx="2.5" stroke="white" stroke-width="1.2" fill="none"/><rect x="22.5" y="4" width="2" height="5" rx="1"/><rect x="1.5" y="2.5" width="17" height="8" rx="1.5"/></svg>
         </div>
       </div>
-      <div class="info-item">
-        <div class="info-icon">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="9" stroke="#f4634a" stroke-width="1.8"/>
-            <path d="M12 7v5l3 3" stroke="#f4634a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+
+      <!-- Brand -->
+      <div class="header">
+        <div class="brand">Impostor</div>
+      </div>
+
+      <!-- Hero text -->
+      <div class="hero">
+        <h1 class="hero-title">
+          No confies en nadie<br>
+          <span class="accent">Ni en tus amigos.</span>
+        </h1>
+        <p class="hero-sub">Una palabra. Un impostor.</p>
+      </div>
+
+      <!-- Cards (visible in left col on tablet/desktop) -->
+      <div class="cards-area">
+        <div class="card card-coral">
+          <span class="card-label">¿Eres tú?</span>
+          <div class="question-mark">?</div>
         </div>
-        <div class="info-text">
-          <span class="info-value">5–10 min</span>
-          <span class="info-label">por partida</span>
+        <div class="card card-green">
+          <span class="card-label">Top Secret</span>
+          <div class="dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <div class="card-text">Tú sí sabes<br>la palabra.</div>
+        </div>
+        <div class="badge">¿Quién finge?</div>
+      </div>
+
+    </div><!-- /col-left -->
+
+    <div class="col-right">
+
+      <!-- Info panel -->
+      <div class="info-panel">
+        <div class="info-item">
+          <div class="info-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#9a9a8e" stroke-width="1.8" stroke-linecap="round">
+              <circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/>
+              <path d="M2 20c0-3.3 2.7-6 6-6h8c3.3 0 6 2.7 6 6"/>
+            </svg>
+          </div>
+          <div class="info-text">
+            <span class="info-value">4–12</span>
+            <span class="info-label">jugadores</span>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f4634a" stroke-width="1.8" stroke-linecap="round">
+              <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>
+            </svg>
+          </div>
+          <div class="info-text">
+            <span class="info-value">5–10 min</span>
+            <span class="info-label">por partida</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- CTA -->
-    <div class="cta-wrap">
-      <button class="btn-primary" onclick="alert('¡Crear partida!')">
-        <span>Crear partida</span>
-        <span class="btn-arrow">→</span>
-      </button>
-    </div>
-
-    <!-- How to play -->
-    <div class="how-to" onclick="alert('Cómo se juega')">
-      <div class="how-to-icon">
-        <span>?</span>
+      <!-- CTA -->
+      <div class="cta-wrap">
+        <a class="btn-primary" href="turno.html">
+          <span>Crear partida</span>
+          <span class="btn-arrow">→</span>
+        </a>
       </div>
-      <span class="how-to-text">Cómo se juega</span>
-    </div>
 
-    <!-- Footer note -->
-    <p class="footer-note">UN SOLO CELULAR · CERO DESCARGAS EXTRA</p>
+      <!-- How to play -->
+      <div class="how-to">
+        <div class="how-to-icon"><span>?</span></div>
+        <span class="how-to-text">Cómo se juega</span>
+      </div>
 
-    <!-- Home indicator -->
-    <div class="home-indicator">
-      <div class="home-indicator-bar"></div>
-    </div>
+      <!-- Footer -->
+      <p class="footer-note">UN SOLO CELULAR · CERO DESCARGAS EXTRA</p>
 
-  </div>
+      <!-- Home indicator (mobile) -->
+      <div class="home-indicator">
+        <div class="home-indicator-bar"></div>
+      </div>
+
+    </div><!-- /col-right -->
+  </div><!-- /wrapper -->
+
 </body>
 </html>
